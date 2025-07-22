@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image src="/images/icons/x.svg" alt="x" width={20} height={20} />
+            <Image src="/images/icons/X.svg" alt="X" width={20} height={20} />
           </a>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import type { Swiper as SwiperType } from 'swiper';
 import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -67,9 +68,13 @@ const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
         <div className="relative">
           <div className="mb-6 flex items-center justify-between">
             <p className="flex items-center gap-2 text-[1.8rem] font-bold text-gray-950 md:text-[3rem]">
-              <span role="img" aria-label="인기 체험을 나타내는 불 아이콘">
-                🔥
-              </span>{' '}
+              <Image
+                src="/images/icons/fire.svg"
+                alt="인기 체험"
+                width={18}
+                height={18}
+                className="size-[1.8rem] md:size-[3.2rem]"
+              />
               인기 체험
             </p>
             <div className="flex space-x-2">

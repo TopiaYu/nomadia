@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 
 import { ActivityCard } from '@/features/activities/components/activity-card';
@@ -27,7 +28,7 @@ interface AllActivitiesProps {
  * @description 모든 체험 목록을 표시하는 컴포넌트입니다.
  */
 const AllActivities = ({ keyword }: AllActivitiesProps) => {
-  const [active, setActive] = useState('문화 · 예술');
+  const [active, setActive] = useState('');
   const [page, setPage] = useState(1);
   const [selectedSort, setSelectedSort] = useState<
     'latest' | 'price_asc' | 'price_desc'
@@ -35,7 +36,7 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
 
   const { data, isLoading, isError, size } = useResActivitiesQuery({
     sort: selectedSort,
-    category: active,
+    category: active || undefined,
     page,
     keyword,
   });
@@ -58,9 +59,13 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
     <div className="px-[2.4rem] md:px-[3rem] lg:px-[4rem]">
       <div className="mb-[1rem] flex items-center justify-between md:mb-[1.6rem] lg:mb-[2rem]">
         <p className="flex items-center gap-2 text-[1.8rem] font-bold text-gray-950 md:text-[3.2rem]">
-          <span role="img" aria-label="모든 체험">
-            🛼
-          </span>{' '}
+          <Image
+            src="/images/icons/skate.svg"
+            alt="모든 체험"
+            width={18}
+            height={18}
+            className="size-[1.8rem] md:size-[3.2rem]"
+          />
           모든 체험
         </p>
         <Dropdown

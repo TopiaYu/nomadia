@@ -37,9 +37,9 @@ export const ActivityCard = ({
     </div>
 
     {/* 콘텐츠 영역 */}
-    <div className="flex flex-1 flex-col rounded-[1.2rem] px-[1.7rem] py-[1.2rem] md:z-10 md:rounded-t-[2.6rem] md:bg-white md:px-[3rem] md:py-[1rem]">
+    <div className="flex flex-1 flex-col rounded-[1.2rem] px-[1.7rem] py-[1.2rem] md:z-10 md:rounded-t-[2.6rem] md:bg-white md:px-[3rem] md:py-[2rem] lg:px-[2.8rem] lg:py-[2.4rem]">
       {/* 제목과 별점 그룹 */}
-      <div className="mt-[0.5rem] flex flex-col gap-[0.6rem] md:mt-[1.4rem]">
+      <div className="mt-[0.5rem] flex flex-col gap-[0.6rem]">
         {/* 제목 */}
         <h3 className="line-clamp-1 text-[1.4rem] leading-[1.8rem] font-semibold text-gray-900 md:overflow-hidden md:text-[1.8rem] md:text-ellipsis md:whitespace-nowrap">
           {activity.title}

@@ -4,6 +4,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import { useRef } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Autoplay, Navigation } from 'swiper/modules';
@@ -43,9 +44,13 @@ const BestActivities = () => {
       {/* 헤더: 항상 노출 */}
       <div className="mb-[4rem] flex items-center justify-between md:mb-[1.6rem] lg:mb-[2rem]">
         <p className="flex items-center gap-2 text-[1.8rem] font-bold text-gray-950 md:text-[3.2rem]">
-          <span role="img" aria-label="fire">
-            🔥
-          </span>{' '}
+          <Image
+            src="/images/icons/fire.svg"
+            alt="인기 체험"
+            width={18}
+            height={18}
+            className="size-[1.8rem] md:size-[3.2rem]"
+          />
           인기 체험
         </p>
         <div className="flex gap-2">
