@@ -50,6 +50,10 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
     setPage(1);
   };
 
+  const selectedSortLabel = SORT_OPTIONS.find(
+    (option) => option.value === selectedSort,
+  )?.label;
+
   const handleSortChange = (value: 'latest' | 'price_asc' | 'price_desc') => {
     setSelectedSort(value);
     setPage(1);
@@ -70,13 +74,13 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
         </p>
         <Dropdown
           trigger={
-            <button className="txt-16-medium flex items-center text-black">
-              가격 <ChevronDown size={18} className="ml-1" />
+            <button className="txt-14-medium flex items-center text-black">
+              {selectedSortLabel} <ChevronDown size={20} className="ml-1" />
             </button>
           }
           dropdownClassName="absolute right-0"
         >
-          <div className="border-sub-300 txt-16-medium h-[11rem] w-[11.2rem] overflow-hidden rounded-xl border-[0.1rem] bg-white">
+          <div className="border-sub-300 txt-14-medium h-[12.3rem] w-[9.6rem] overflow-hidden rounded-xl border-[0.1rem] bg-white">
             {SORT_OPTIONS.map(({ label, value }) => (
               <button
                 key={value}
@@ -85,7 +89,7 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
                     value as 'latest' | 'price_asc' | 'price_desc',
                   )
                 }
-                className={`txt-14-medium w-full px-4 py-2 hover:bg-blue-50 ${
+                className={`txt-14-medium h-[4.1rem] w-full px-[1rem] py-[0.6rem] hover:bg-blue-50 ${
                   selectedSort === value ? 'text-main font-bold' : 'text-black'
                 }`}
               >
