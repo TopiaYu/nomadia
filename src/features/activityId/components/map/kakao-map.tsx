@@ -13,7 +13,7 @@ const KakaoMap = ({ address }: { address: string | undefined }) => {
     lng: 127.03604683616,
   });
   const [loading, error] = useKakaoLoader({
-    appkey: process.env.NEXT_PUBLIC_APPKEY!, // 발급 받은 APPKEY
+    appkey: process.env.NEXT_PUBLIC_KAKAO!, // 발급 받은 APPKEY
   });
 
   useEffect(() => {
