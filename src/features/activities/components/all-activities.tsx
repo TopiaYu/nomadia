@@ -46,7 +46,11 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
   const totalPages = Math.max(1, Math.ceil(totalCount / size));
 
   const handleCategoryChange = (category: string) => {
-    setActive(category);
+    if (active === category) {
+      setActive('');
+    } else {
+      setActive(category);
+    }
     setPage(1);
   };
 

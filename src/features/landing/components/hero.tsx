@@ -4,10 +4,10 @@ import type { Swiper as SwiperType } from 'swiper';
 import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import type { Activity } from '@/features/activities/libs/types/activity';
 import { ErrorMessage } from '@/shared/components/error-message/error-message';
 import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
 import useActivity from '@/shared/libs/hooks/useActivityQuery';
+import type { Activity } from '@/shared/types/activity';
 
 interface HeroProps {
   swiperRef: React.MutableRefObject<SwiperType | null>;
@@ -51,13 +51,13 @@ const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
           </div>
           <div className="mb-16 flex justify-center space-x-4">
             <button
-              className="bg-main max-w-xs flex-1 rounded-full px-8 py-3 text-[1.4rem] font-semibold text-white transition-colors hover:opacity-90 md:text-[1.8rem]"
+              className="bg-main max-w-xs flex-1 cursor-pointer rounded-full px-8 py-3 text-[1.4rem] font-semibold text-white transition-colors hover:opacity-90 md:text-[1.8rem]"
               onClick={() => router.push('/activities')}
             >
               체험 찾기
             </button>
             <button
-              className="bg-sub text-main max-w-xs flex-1 rounded-full px-8 py-3 text-[1.4rem] font-semibold transition-colors hover:opacity-80 md:text-[1.8rem]"
+              className="bg-sub text-main max-w-xs flex-1 cursor-pointer rounded-full px-8 py-3 text-[1.4rem] font-semibold transition-colors hover:opacity-80 md:text-[1.8rem]"
               onClick={() => router.push('/activities')}
             >
               호스트 되기
@@ -80,13 +80,13 @@ const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
             <div className="flex space-x-2">
               <button
                 onClick={() => swiperRef.current?.slidePrev()}
-                className="bg-sub rounded-full p-2 transition-colors hover:bg-gray-200"
+                className="bg-sub cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-200"
               >
                 <ChevronLeft className="h-5 w-5 md:h-7 md:w-7" />
               </button>
               <button
                 onClick={() => swiperRef.current?.slideNext()}
-                className="bg-sub rounded-full p-2 transition-colors hover:bg-gray-200"
+                className="bg-sub cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-200"
               >
                 <ChevronRight className="h-5 w-5 md:h-7 md:w-7" />
               </button>

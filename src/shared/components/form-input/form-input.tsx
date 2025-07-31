@@ -9,20 +9,29 @@ import {
 
 /**
  * @description react-hook-form 과 함께 쓰는 공통 입력 컴포넌트
- *  * 제네릭을 사용하여 로그인, 회원가입 등 모든 폼에서 재사용할 수 있습니다. so hard,,,
+ * input, textarea, select, number 등 다양한 입력 타입을 지원합니다.
  * @param {string} label - 창 위에 표시될 라벨 텍스트
  * @param {Path<T>} name - react-hook-form에 등록할 필드의 이름
  * @param {UseFormRegister<T>} register - 부모 폼에서 전달받는 react-hook-form의 register 함수
  * @param {FieldError} [errors] - 해당 필드의 유효성 검사 에러 객체
- * @param {React.InputHTMLAttributes<HTMLInputElement>} ...rest - type, placeholder 등 표준 HTML input 속성을 그대로 전달받습니다.
+ * @param {'input' | 'textarea' | 'select' | 'number'} inputType - 입력 요소의 타입
+ * @param {Array<{value: string, label: string}>} [options] - select 타입일 때 사용할 옵션들
+ * @param {number} [rows] - textarea 타입일 때 사용할 행 수
+ * @param {React.InputHTMLAttributes<HTMLInputElement> | React.TextareaHTMLAttributes<HTMLTextAreaElement> | React.SelectHTMLAttributes<HTMLSelectElement>} ...rest - 표준 HTML 속성들을 그대로 전달받습니다.
  */
 
-interface FormInputProps<T extends FieldValues>
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface FormInputProps<T extends FieldValues> {
   label: string;
   name: Path<T>;
   register: UseFormRegister<T>;
   error?: FieldError;
+  inputType?: 'input' | 'textarea' | 'select' | 'number' | 'file';
+  options?: Array<{ value: string; label: string }>;
+  rows?: number;
+  type?: string;
+  placeholder?: string;
+  className?: string;
+  [key: string]: unknown; // 기타 HTML 속성들
 }
 
 export const FormInput = <T extends FieldValues>({
@@ -30,52 +39,145 @@ export const FormInput = <T extends FieldValues>({
   name,
   register,
   error,
+  inputType = 'input',
+  options = [],
+  rows = 4,
+  type = 'text',
+  placeholder,
+  className = '',
   ...rest
 }: FormInputProps<T>) => {
   const [showPassword, setShowPassword] = useState(false);
-  const isPasswordField = rest.type === 'password';
+  const isPasswordField = type === 'password';
+
+  // 공통 스타일 클래스
+  const baseInputClass = `w-full bg-white rounded-[1.2rem] border px-[1.6rem] text-[1.4rem] focus:outline-0 md:text-[1.6rem] ${
+    error ? 'border-red-500' : 'border-gray-200'
+  } ${className}`;
+
+  // 입력 요소 렌더링 함수
+  const renderInputElement = () => {
+    switch (inputType) {
+      case 'textarea':
+        return (
+          <textarea
+            id={name}
+            rows={rows}
+            placeholder={placeholder}
+            {...register(name)}
+            className={`${baseInputClass} h-auto resize-none py-[1.2rem]`}
+            {...rest}
+          />
+        );
+
+      case 'select':
+        return (
+          <div className="relative">
+            <select
+              id={name}
+              {...register(name)}
+              className={`${baseInputClass} h-[4.4rem] appearance-none pr-[4rem] md:h-[4.8rem]`}
+              {...rest}
+            >
+              <option value="" disabled>
+                {placeholder || '선택해 주세요'}
+              </option>
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[1.6rem]">
+              <Image
+                src="/images/icons/arrow.svg"
+                alt="dropdown-arrow"
+                width={16}
+                height={16}
+                className="rotate-270"
+              />
+            </div>
+          </div>
+        );
+
+      case 'number':
+        return (
+          <input
+            id={name}
+            type="number"
+            placeholder={placeholder}
+            {...register(name, {
+              setValueAs: (value) => {
+                const num = parseInt(value, 10);
+                return isNaN(num) ? undefined : num;
+              },
+            })}
+            className={`${baseInputClass} h-[4.4rem] md:h-[4.8rem]`}
+            {...rest}
+            max={100000000}
+            min={0}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+
+              if (target.value.length > 8) {
+                target.value = target.value.slice(0, 8);
+              }
+            }}
+          />
+        );
+
+      default: // input
+        return (
+          <div className="relative">
+            <input
+              id={name}
+              type={
+                isPasswordField ? (showPassword ? 'text' : 'password') : type
+              }
+              placeholder={placeholder}
+              {...register(name)}
+              className={`${baseInputClass} h-[4.4rem] md:h-[4.8rem]`}
+              {...rest}
+            />
+            {isPasswordField && (
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center pr-3"
+              >
+                {showPassword ? (
+                  <Image
+                    src="/images/icons/eye-on.png"
+                    alt="eye-on"
+                    width={24}
+                    height={24}
+                  />
+                ) : (
+                  <Image
+                    src="/images/icons/eye-off.png"
+                    alt="eye-off"
+                    width={24}
+                    height={24}
+                  />
+                )}
+              </button>
+            )}
+          </div>
+        );
+    }
+  };
+
   return (
-    <div className="mb-[2.4rem] flex flex-col">
-      <label htmlFor={name} className="txt-16-medium mb-[1.2rem] text-gray-950">
+    <div className="mb-[2.4rem] flex flex-col gap-[1rem]">
+      <label htmlFor={name} className="text-[1.6rem] font-bold text-gray-950">
         {label}
       </label>
-      <div className="relative">
-        <input
-          id={name}
-          {...rest}
-          type={
-            isPasswordField ? (showPassword ? 'text' : 'password') : rest.type
-          }
-          {...register(name)} // type, placeholder 등을 여기에 적용
-          className={`mb-[0.6rem] h-[4.4rem] w-full rounded-[1.2rem] border px-[1.6rem] text-[1.4rem] focus:outline-0 md:h-[4.8rem] md:text-[1.6rem] ${
-            error ? 'border-red-500' : 'border-gray-200'
-          } `}
-        />
-        {isPasswordField && (
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-3 flex items-center pr-3"
-          >
-            {showPassword ? (
-              <Image
-                src="/images/icons/eye-on.png"
-                alt="eye-on"
-                width={24}
-                height={24}
-              />
-            ) : (
-              <Image
-                src="/images/icons/eye-off.png"
-                alt="eye-off"
-                width={24}
-                height={24}
-              />
-            )}
-          </button>
-        )}
-      </div>
-      {error && <p className="txt-12-medium text-red-500">{error.message}</p>}
+      {renderInputElement()}
+      {error && (
+        <p className="text-[1.2rem] font-medium text-red-500">
+          {error.message}
+        </p>
+      )}
     </div>
   );
 };

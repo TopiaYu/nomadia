@@ -26,9 +26,3 @@ export const refreshToken = async (refreshToken: string) => {
   });
   return response.data;
 };
-
-//리프레시토큰 테스트용 api
-export const getMe = async () => {
-  const response = await api.get('/users/me');
-  return response.data;
-};

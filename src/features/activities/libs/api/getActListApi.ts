@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
   GetActListApiParams,
   GetActListApiResponse,
-} from '@/features/activities/libs/types/activity';
+} from '@/shared/types/activity';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

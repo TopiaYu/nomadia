@@ -5,7 +5,7 @@ import localFont from 'next/font/local';
 
 import { Providers } from '@/app/providers';
 import Footer from '@/shared/components/footer';
-import Header from '@/shared/components/header';
+import HeaderWrapper from '@/shared/components/header-wrapper';
 
 const pretendard = localFont({
   src: '../../public/fonts/PretendardVariable.woff2',
@@ -26,9 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${pretendard.variable}`}>
-      <body className={pretendard.className}>
+      <body className={`${pretendard.className} bg-background`}>
         <Providers>
-          <Header />
+          <HeaderWrapper />
           <main>{children}</main>
           <Footer />
         </Providers>

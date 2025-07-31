@@ -4,6 +4,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Autoplay, Navigation } from 'swiper/modules';
@@ -20,6 +21,7 @@ import useActivity from '@/shared/libs/hooks/useActivityQuery';
  * @description 배너 캐러셀을 표시하는 컴포넌트입니다.
  */
 const BannerCarousel = () => {
+  const router = useRouter();
   const swiperRef = useRef<SwiperType | null>(null);
   const { data, isLoading, isError } = useActivity({
     sort: 'most_reviewed',
@@ -27,6 +29,11 @@ const BannerCarousel = () => {
     size: 8,
   });
   const banners = data?.activities ?? [];
+
+  // 배너 클릭 시 액티비티 상세 페이지로 이동
+  const handleBannerClick = (activityId: number) => {
+    router.push(`/activities/${activityId}`);
+  };
 
   return (
     <div className="mx-auto mt-[3.2rem] w-full max-w-[112rem] px-[2.4rem] md:mt-[5rem] md:px-[3rem] lg:mt-[7rem] lg:px-[4rem]">
@@ -74,7 +81,18 @@ const BannerCarousel = () => {
         ) : (
           banners.map((banner, idx) => (
             <SwiperSlide key={banner.id}>
-              <div className="relative h-[18.1rem] w-full overflow-hidden rounded-[1.2rem] shadow-lg md:h-[37.5rem] md:rounded-[1.8rem] lg:h-[50rem] lg:rounded-[2.4rem]">
+              <div
+                className="relative h-[18.1rem] w-full cursor-pointer overflow-hidden rounded-[1.2rem] shadow-lg transition-transform hover:scale-[1.02] md:h-[37.5rem] md:rounded-[1.8rem] lg:h-[50rem] lg:rounded-[2.4rem]"
+                onClick={() => handleBannerClick(banner.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleBannerClick(banner.id);
+                  }
+                }}
+              >
                 <Image
                   src={banner.bannerImageUrl}
                   alt={banner.title}

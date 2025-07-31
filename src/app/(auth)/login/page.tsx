@@ -1,7 +1,10 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { LoginForm } from '@/features/auth/login/components/LoginForm';
+import handleKakaoLogin from '@/features/auth/utils/kakao-login-handler';
 
 const Login = () => {
   return (
@@ -36,7 +39,11 @@ const Login = () => {
 
       <div className="flex w-full justify-between">
         <p className="txt-16-medium text-gray-950">간편 로그인하기</p>
-        <button type="button" className="cursor-pointer">
+        <button
+          type="button"
+          className="cursor-pointer"
+          onClick={handleKakaoLogin}
+        >
           <Image
             src="/images/icons/logo-kakao.png"
             alt="kakao image"

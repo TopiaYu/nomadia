@@ -4,7 +4,7 @@ import { getActListApi } from '@/features/activities/libs/api/getActListApi';
 import {
   GetActListApiParams,
   GetActListApiResponse,
-} from '@/features/activities/libs/types/activity';
+} from '@/shared/types/activity';
 
 /**
  * 체험 목록 조회 훅

@@ -1,5 +1,7 @@
+'use client';
+
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { User } from '../types/auth.types';
 
@@ -16,7 +18,10 @@ interface AuthState {
   logout: () => void;
   // setTokens를 통해 토큰만 교체 가능
   setTokens: (tokens: { accessToken: string; refreshToken: string }) => void;
+  setUser: (user: User) => void;
 }
+
+const isClient = typeof window !== 'undefined';
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -30,8 +35,8 @@ export const useAuthStore = create<AuthState>()(
         set({
           isLoggedIn: true,
           user: user,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
+          accessToken,
+          refreshToken,
         }),
       logout: () =>
         set({
@@ -42,12 +47,20 @@ export const useAuthStore = create<AuthState>()(
         }),
       setTokens: ({ accessToken, refreshToken }) =>
         set({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
+          accessToken,
+          refreshToken,
         }),
+      setUser: (user: User) => set(() => ({ user })),
     }),
     {
       name: 'auth-storage',
+      storage: isClient ? createJSONStorage(() => localStorage) : undefined,
+      partialize: (state) => ({
+        isLoggedIn: state.isLoggedIn,
+        user: state.user,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+      }),
     },
   ),
 );

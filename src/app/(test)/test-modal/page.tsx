@@ -1,9 +1,8 @@
 //테스트 파일입니다
-//테스트용 코드니까, 참고만 하고 슥 넘어가세요~
 'use client';
 import { useState } from 'react';
 
-import Modal from '@/shared/components/modal';
+import Modal from '@/shared/components/modal/components';
 import Pagination from '@/shared/components/pagination/pagination';
 import { Button } from '@/shared/libs/shadcn/components/ui/button';
 import { useModalStore } from '@/shared/libs/stores/useModalStore';
@@ -61,8 +60,7 @@ export default function Page() {
             <br />
             정말로 뒤로 가시겠습니까?
           </Modal.Header>
-
-          <Modal.Footer>
+          <div className="flex gap-2 md:gap-3">
             <Modal.Button color="white" ariaLabel="취소" onClick={closeModal}>
               취소
             </Modal.Button>
@@ -76,18 +74,25 @@ export default function Page() {
             >
               확인
             </Modal.Button>
-          </Modal.Footer>
+          </div>
         </Modal>
       )}
+      {/* 모달이 하단에서 위로 쑥 올라오는 모션은 못넣을거임.. */}
       {chooseModal === 3 && (
-        <Modal type="custom">
-          <div className="h-[24.3rem] w-[27.9rem] bg-amber-300 text-3xl">
-            커스텀 공간: 기본 패딩 24px입니다. ...
+        <Modal type="custom" extraClassName="w-[38.5rem] h-[54.9rem]">
+          {/* children */}
+          <div className="flex-center flex-col text-3xl">
+            <p>함께 배우면 즐거운 스트릿 댄스</p>
+            <span>⭐️⭐️⭐️⭐️⭐️</span>
             <Modal.Header>소중한 경험을 들려주세요</Modal.Header>
+            <Modal.Button
+              color="blue"
+              ariaLabel="작성하기 버튼"
+              onClick={closeModal}
+            >
+              작성하기
+            </Modal.Button>
           </div>
-          <Modal.Button color="blue" ariaLabel="확인 버튼" onClick={closeModal}>
-            확인
-          </Modal.Button>
         </Modal>
       )}
     </div>

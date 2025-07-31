@@ -47,7 +47,7 @@ const NotFound = () => {
       </div>
 
       <Image
-        src="images/sad-laptop.svg"
+        src="/images/sad-laptop.svg"
         alt="Sad laptop"
         width={300}
         height={300}

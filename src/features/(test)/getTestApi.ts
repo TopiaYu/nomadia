@@ -3,7 +3,7 @@ import { testInstance } from '@/features/(test)/testInstance';
 import {
   GetActListApiParams,
   GetActListApiResponse,
-} from '@/features/activities/libs/types/activity';
+} from '@/shared/types/activity';
 
 interface GetListWithCursorID extends GetActListApiParams {
   cursorId?: number; // 요청 파라미터에 - 커서 항목 필수

@@ -5,7 +5,7 @@ import { getActListApi } from '@/features/activities/libs/api/getActListApi';
 import {
   GetActListApiParams,
   GetActListApiResponse,
-} from '@/features/activities/libs/types/activity';
+} from '@/shared/types/activity';
 
 type ResponsiveParams = Omit<GetActListApiParams, 'size'>;
 

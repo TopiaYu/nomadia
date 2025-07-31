@@ -33,6 +33,10 @@
   /* Yellow Colors */
   --color-yellow: oklch(0.848 0.1563 82.44); /* #FFC23D*/
 
+  /* Orange Colors */
+  --color-orange-100: oklch(0.9775 0.036 95.01); /* FFF8DD */
+  --color-orange-400: oklch(0.8162 0.1434 68.42); /* FFB050 */
+
   /* shadcn/ui 필수 변수들 */
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
@@ -209,7 +213,7 @@
     background-size: cover;
   }
 
-  /* 체험 카드 그림자 유틸리티 클래스 */
+  /* 체험 카드 그림자 유틸리티 클래스 - Card Shadow Utility Class */
   .shadow-experience-card {
     box-shadow: 0 2.25px 13.5px 0 rgba(156, 180, 202, 0.2);
   }
