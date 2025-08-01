@@ -17,7 +17,9 @@
     "lighthouse:upload": "lhci upload",
     "lighthouse:ci": "pnpm lighthouse",
     "lighthouse:open": "open .lighthouseci/lhr-*.html",
-    "lighthouse:results": "echo 'Lighthouse 결과 파일:' && ls -la .lighthouseci/"
+    "lighthouse:results": "echo 'Lighthouse 결과 파일:' && ls -la .lighthouseci/",
+    "lighthouse:html": "lhci autorun --output=html --output-path=./lighthouse-reports",
+    "lighthouse:open-html": "open lighthouse-reports/*.html"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

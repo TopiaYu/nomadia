@@ -3,15 +3,17 @@ module.exports = {
     collect: {
       // 실제 배포 URL 사용 (포트 충돌 방지)
       url: ['https://nomadia-two.vercel.app/'],
-
-      // 또는 다른 포트 사용
-      // startServerCommand: 'pnpm start --port 3001',
-      // startServerReadyPattern: 'ready on',
-      // url: ['http://localhost:3001'],
       numberOfRuns: 3,
+      // 한글 설정 및 HTML 보고서 생성
+      settings: {
+        locale: 'ko',
+        output: 'html',
+        outputPath: './lighthouse-reports',
+        chromeFlags: '--no-sandbox --disable-dev-shm-usage',
+      },
     },
     assert: {
-      // 성능 기준 설정
+      // 성능 기준 설정 (한글 메시지)
       assertions: {
         'categories:performance': ['warn', { minScore: 0.5 }],
         'categories:accessibility': ['error', { minScore: 0.5 }],
@@ -25,8 +27,9 @@ module.exports = {
       },
     },
     upload: {
-      // 업로드 비활성화 (토큰 없이 로컬에서만 실행)
+      // HTML 보고서를 GitHub Actions에서 업로드
       target: 'filesystem',
+      outputDir: './lighthouse-reports',
     },
   },
 };
