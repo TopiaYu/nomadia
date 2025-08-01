@@ -22,7 +22,6 @@ const ActivityPage = () => {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useActivityIdQuery(id);
 
-  const schedules = data?.schedules;
   const images = data?.subImages;
 
   if (isError) {
@@ -69,11 +68,7 @@ const ActivityPage = () => {
             </header>
             {/* 체험 예약 캘린더 */}
             <section className="lg:absolute lg:top-[21rem] lg:left-0">
-              <ReservationModal
-                scheduleArray={schedules}
-                price={data?.price}
-                activityId={Number(id)}
-              />
+              <ReservationModal price={data?.price} activityId={Number(id)} />
             </section>
           </div>
         </div>

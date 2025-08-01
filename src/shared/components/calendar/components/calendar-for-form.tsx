@@ -1,4 +1,4 @@
-import { Schedules } from '@/features/activityId/libs/types/activityInfo';
+import { AvailableScheduleList } from '@/features/activityId/libs/types/availableSchedule';
 import ArrowButton from '@/shared/components/calendar/components/arrow-button';
 import DaysOfMonth from '@/shared/components/calendar/components/days-of-month';
 import {
@@ -50,7 +50,7 @@ const CalendarForForm = ({
   isForReservation = false,
   changeFormValue,
 }: {
-  scheduleArray?: Schedules[];
+  scheduleArray?: AvailableScheduleList;
   calendarWidth?: string;
   dayOfWeekStyle?: string;
   cellStyle?: string;

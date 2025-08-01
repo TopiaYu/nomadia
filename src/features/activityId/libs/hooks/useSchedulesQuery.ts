@@ -8,7 +8,7 @@ export const useSchedulesQuery = (
   params: { year: string; month: string },
 ) => {
   return useQuery({
-    queryKey: ['schedule'],
+    queryKey: ['schedule', id, params.year, params.month],
     queryFn: () => getSchedules(id, params),
     staleTime: 1000 * 60 * 5,
     retry: 1,
