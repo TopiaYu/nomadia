@@ -12,6 +12,8 @@ const OwnerDropdown = ({
 }) => {
   const { user } = useAuthStore();
   const isOwner = user?.id === String(ownerId);
+  console.log(user?.id, 'useid');
+  console.log(ownerId, 'ownerId');
 
   const handleDelete = () => {
     console.log(
@@ -20,6 +22,8 @@ const OwnerDropdown = ({
       ' isOwner:',
       isOwner,
       'want to delete?',
+      user?.id,
+      'user.id',
     );
   };
   return (

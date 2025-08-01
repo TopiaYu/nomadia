@@ -7,11 +7,11 @@ import AddressWithMap from '@/features/activityId/components/map/address-with-ma
 import OwnerDropdown from '@/features/activityId/components/owner-drop-down';
 import ReservationModal from '@/features/activityId/components/reservation-modal';
 import Reviews from '@/features/activityId/components/reviews';
-import Star from '@/features/activityId/components/star';
 import SubImages from '@/features/activityId/components/sub-images';
 import { activityIdStyle } from '@/features/activityId/libs/constants/variants';
 import { useActivityIdQuery } from '@/features/activityId/libs/hooks/useActivityIdQuery';
 import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
+import StarImage from '@/shared/components/star';
 
 // TODO
 // 🐛 1.  calendar-for-form에서 클릭 시 id 저장하는 코드 제거하기 O
@@ -51,7 +51,7 @@ const ActivityPage = () => {
               </div>
               {/* 별점 & 후기 & 구분선 */}
               <div className="mb-[1rem] flex items-center gap-[0.6rem] text-[1.4rem] leading-none text-gray-700">
-                <Star />
+                <StarImage />
                 <p>
                   {data?.rating}({data?.reviewCount})
                 </p>

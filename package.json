@@ -10,7 +10,14 @@
     "lint:fix": "next lint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lighthouse": "lhci autorun",
+    "lighthouse:collect": "lhci collect",
+    "lighthouse:assert": "lhci assert",
+    "lighthouse:upload": "lhci upload",
+    "lighthouse:ci": "pnpm lighthouse",
+    "lighthouse:open": "open .lighthouseci/lhr-*.html",
+    "lighthouse:results": "echo 'Lighthouse 결과 파일:' && ls -la .lighthouseci/"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -44,6 +51,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@lhci/cli": "^0.15.1",
     "@next/eslint-plugin-next": "^15.3.5",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

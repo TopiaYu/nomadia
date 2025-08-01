@@ -4,11 +4,11 @@
 
 import { useState } from 'react';
 
-import Star from '@/features/activityId/components/star';
 import { activityIdStyle } from '@/features/activityId/libs/constants/variants';
 import { useReviewsQuery } from '@/features/activityId/libs/hooks/useReviewsQuery';
 import { formatRating } from '@/features/activityId/libs/utils/formatRating';
 import Pagination from '@/shared/components/pagination/pagination';
+import StarImage from '@/shared/components/star';
 import { cn } from '@/shared/libs/cn';
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
 
@@ -37,7 +37,7 @@ const Reviews = ({ activityId }: { activityId: number }) => {
             {formatRating(data?.averageRating, data?.totalCount)}
           </span>
           <div className="flex-center">
-            <Star />
+            <StarImage />
             {data && (
               <span className="ml-0.5 text-[1.4rem] font-medium text-gray-600">
                 {formatPrice(data?.totalCount)}개 후기
@@ -71,7 +71,7 @@ const Reviews = ({ activityId }: { activityId: number }) => {
                 </header>
                 <section className="mt-[0.4rem] mb-[0.8rem] flex items-center">
                   {Array.from({ length: review.rating }, (_, idx) => (
-                    <Star key={idx} />
+                    <StarImage key={idx} />
                   ))}
                 </section>
                 <p className="text-[1.4rem] text-gray-950 md:text-[1.6rem]">
