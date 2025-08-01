@@ -8,7 +8,7 @@ import { searchVariant } from '@/shared/libs/constants/searchVariant';
 
 interface SearchProps {
   placeholder?: string;
-  setKeyword: (value: React.SetStateAction<string>) => void;
+  setKeyword?: (value: React.SetStateAction<string>) => void;
 }
 
 const Search: React.FC<SearchProps> = ({
