@@ -121,7 +121,7 @@ const ReservationForm = ({
             },
           });
         })}
-        className="shadow-experience-card flex flex-col overflow-auto p-[2.4rem] pb-[1.8rem] md:px-[3rem] lg:p-[3rem]"
+        className="shadow-experience-card flex flex-col overflow-auto p-[2.4rem] pb-[1.8rem] md:px-[3rem] lg:!rounded-[3rem] lg:p-[3rem]"
       >
         {/* 모바일 - 스텝2(인원 체크) */}
         {!isDesktop && !isTablet && appear && nextStep && (

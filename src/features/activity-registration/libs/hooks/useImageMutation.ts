@@ -38,12 +38,12 @@ export const createMultipleImageFormData = (
 /**
  * 이미지 파일 유효성 검사 함수
  * @param file - 검사할 파일
- * @param maxSize - 최대 파일 크기 (MB, 기본값: 5MB)
+ * @param maxSize - 최대 파일 크기 (MB, 기본값: 4MB)  추측으로는 4.5MB 넘으면 에러인거 같은데 정확히 명시되어있지 않아 4MB로 설정
  * @returns 유효성 검사 결과
  */
 export const validateImageFile = (
   file: File,
-  maxSize: number = 5,
+  maxSize: number = 4,
 ): { isValid: boolean; error?: string } => {
   // 파일 타입 검사
   if (!file.type.startsWith('image/')) {
@@ -55,7 +55,7 @@ export const validateImageFile = (
   if (fileSizeInMB > maxSize) {
     return {
       isValid: false,
-      error: `파일 크기는 ${maxSize}MB 이하여야 합니다.`,
+      error: `파일 크기는 ${maxSize}MB 이하여야 합니다. (현재: ${fileSizeInMB.toFixed(1)}MB)`,
     };
   }
 
@@ -67,10 +67,12 @@ export const validateImageFile = (
  * @author 김영현
  * @description FormData를 받아서 이미지를 업로드하는 훅
  * @param onSuccess - 업로드 성공 시 실행할 콜백 함수 (선택사항)
+ * @param onError - 업로드 실패 시 실행할 콜백 함수 (선택사항)
  * @returns 이미지 업로드 mutation 객체
  */
 export const useImageUploadMutation = (
   onSuccess?: (data: UploadImageResponse) => void,
+  onError?: (error: Error) => void,
 ) => {
   return useMutation<UploadImageResponse, Error, FormData>({
     mutationFn: uploadImageApi,
@@ -86,6 +88,9 @@ export const useImageUploadMutation = (
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
       toast.error('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+
+      // 에러 콜백 실행
+      onError?.(error);
     },
   });
 };

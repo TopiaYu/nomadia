@@ -2,12 +2,13 @@
 
 import { SearchIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { searchVariant } from '@/shared/libs/constants/searchVariant';
 
 interface SearchProps {
   placeholder?: string;
+  setKeyword: (value: React.SetStateAction<string>) => void;
 }
 
 const Search: React.FC<SearchProps> = ({
@@ -18,6 +19,10 @@ const Search: React.FC<SearchProps> = ({
   const defaultValue = searchParams.get('search') ?? '';
   const [keyword, setKeyword] = useState(defaultValue);
   const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    setKeyword(defaultValue);
+  }, [defaultValue]);
 
   const handleSearch = () => {
     const trimmed = keyword.trim();
@@ -49,7 +54,7 @@ const Search: React.FC<SearchProps> = ({
           placeholder={isFocused ? '' : placeholder}
           className={style.input}
         />
-        <button onClick={handleSearch} className={style.button}>
+        <button type="button" onClick={handleSearch} className={style.button}>
           검색하기
         </button>
       </div>

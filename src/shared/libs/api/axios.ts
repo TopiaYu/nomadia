@@ -53,6 +53,7 @@ api.interceptors.response.use(
         if (!refreshToken) {
           alert('세션이 만료되었습니다. 다시 로그인해주세요.');
           logout();
+          window.location.replace('/login');
           return Promise.reject(error);
         }
 
@@ -71,6 +72,7 @@ api.interceptors.response.use(
         const { logout } = useAuthStore.getState();
         alert('세션 갱신 실패, 다시 로그인해주세요');
         logout();
+        window.location.replace('/login');
         return Promise.reject(refreshError);
       }
     }

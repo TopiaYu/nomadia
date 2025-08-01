@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isAxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -14,6 +15,7 @@ export const SignupForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting, isValid },
   } = useForm<SignupFormType>({
     resolver: zodResolver(signupSchema),
@@ -29,8 +31,14 @@ export const SignupForm = () => {
       toast.success('회원가입 성공');
       router.push('./login');
     } catch (error) {
-      console.log('회원가입 실패', error);
-      toast.error('회원가입 실패');
+      if (isAxiosError(error) && error.response?.status === 409) {
+        setError('email', {
+          type: 'manual',
+          message: '이미 사용중인 이메일입니다.',
+        });
+      } else {
+        toast.error('회원가입 중 오류가 발생했습니다.');
+      }
     }
   };
 

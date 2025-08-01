@@ -1,5 +1,6 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -18,8 +19,10 @@ const Header = () => {
   const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
   const { data: myData } = useMyProfile();
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
+    queryClient.clear();
     logout();
     router.push('/activities');
   };

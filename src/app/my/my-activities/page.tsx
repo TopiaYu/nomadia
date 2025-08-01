@@ -1,10 +1,13 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { DeleteConfirmModal } from '@/features/my/my-activities/components/delete-confirm-modal';
 import { MyActivitiesList } from '@/features/my/my-activities/components/my-activities-list';
+import { useModalStore } from '@/shared/libs/stores/useModalStore';
 
 const MyActivityPage = () => {
+  const { isModalOpen } = useModalStore();
   return (
     <>
       {/* 페이지 헤더 */}
@@ -12,7 +15,7 @@ const MyActivityPage = () => {
         <header className="flex flex-col gap-[0.4rem]">
           <h1 className="text-[1.8rem] font-bold text-gray-950">내 체험관리</h1>
           <span className="text-[1.4rem] font-medium text-gray-500">
-            체험을 등록하거나 수정 및 삭제가 가능합니다.{' '}
+            체험을 등록하거나 수정 및 삭제가 가능합니다.
           </span>
         </header>
         <Link
@@ -34,7 +37,7 @@ const MyActivityPage = () => {
       {/* 내 체험 리스트 */}
       <MyActivitiesList />
       {/* 삭제 확인 모달 */}
-      <DeleteConfirmModal />
+      {isModalOpen && <DeleteConfirmModal />}
     </>
   );
 };

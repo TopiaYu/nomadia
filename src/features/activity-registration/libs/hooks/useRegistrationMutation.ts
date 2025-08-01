@@ -13,7 +13,7 @@ export const useRegistrationMutation = () => {
       // 성공 시 관련 쿼리들을 무효화하여 새로고침
       queryClient.invalidateQueries({ queryKey: ['activities'] });
       queryClient.invalidateQueries({ queryKey: ['my-activities'] });
-      toast.success('체험이 성공적으로 등록되었습니다.');
+      // toast 메시지 제거 - 모달로 대체
     },
     onError: (error) => {
       console.error('체험 등록 실패:', error);

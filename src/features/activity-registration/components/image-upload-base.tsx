@@ -56,16 +56,48 @@ const ImageUploadBase = ({
   const canAddMore = totalImages.length < maxImages;
 
   // 이미지 업로드 mutation
-  const imageUploadMutation = useImageUploadMutation((data) => {
+  const imageUploadMutation = useImageUploadMutation(
+    (data) => {
+      if (singleImage) {
+        onChange(data.activityImageUrl);
+        setLocalImageUrls([]);
+        setIsUploading(false);
+      } else {
+        const newImageUrls = [...(value as string[]), data.activityImageUrl];
+        onChange(newImageUrls);
+
+        // 로컬 URL 제거
+        setLocalImageUrls((prev) => {
+          if (prev.length > 0) {
+            const lastLocalUrl = prev[prev.length - 1];
+            URL.revokeObjectURL(lastLocalUrl);
+            return prev.slice(0, -1);
+          }
+          return prev;
+        });
+
+        // 업로드 중 상태 제거 (가장 오래된 것부터)
+        setUploadingIndexes((prev) => {
+          const newSet = new Set(prev);
+          const oldestIndex = Math.min(...Array.from(newSet));
+          newSet.delete(oldestIndex);
+          return newSet;
+        });
+      }
+    },
+    (_error) => {
+      // 업로드 실패 시 상태 정리
+      handleUploadError();
+    },
+  );
+
+  // 업로드 실패 시 상태 정리 함수
+  const handleUploadError = () => {
     if (singleImage) {
-      onChange(data.activityImageUrl);
       setLocalImageUrls([]);
       setIsUploading(false);
     } else {
-      const newImageUrls = [...(value as string[]), data.activityImageUrl];
-      onChange(newImageUrls);
-
-      // 로컬 URL 제거
+      // 마지막 로컬 이미지 URL 제거
       setLocalImageUrls((prev) => {
         if (prev.length > 0) {
           const lastLocalUrl = prev[prev.length - 1];
@@ -75,16 +107,15 @@ const ImageUploadBase = ({
         return prev;
       });
 
-      // 업로드 중 상태 제거
+      // 업로드 중 상태 제거 (가장 오래된 것부터)
       setUploadingIndexes((prev) => {
         const newSet = new Set(prev);
-        const currentCount = [...(value as string[]), data.activityImageUrl]
-          .length;
-        newSet.delete(currentCount - 1);
+        const oldestIndex = Math.min(...Array.from(newSet));
+        newSet.delete(oldestIndex);
         return newSet;
       });
     }
-  });
+  };
 
   // 파일 선택 핸들러
   const handleFileSelect = async (files: FileList | null) => {
@@ -92,8 +123,8 @@ const ImageUploadBase = ({
 
     const file = files[0];
 
-    // 파일 유효성 검사
-    const validation = validateImageFile(file);
+    // 파일 유효성 검사 (4MB 제한)
+    const validation = validateImageFile(file, 4);
     if (!validation.isValid) {
       toast.error(validation.error);
       return;
@@ -226,16 +257,14 @@ const ImageUploadBase = ({
               )}
             </div>
 
-            {/* 삭제 버튼 - 컨테이너 밖으로 분리 */}
-            {!(singleImage ? isUploading : uploadingIndexes.has(index)) && (
-              <button
-                type="button"
-                onClick={() => handleRemoveImage(index)}
-                className="bg-opacity-70 flex-center absolute -top-[0.5rem] -right-[0.7rem] h-[2rem] w-[2rem] rounded-full bg-gray-950 text-white md:h-[2.6rem] md:w-[2.6rem]"
-              >
-                <X size={10} className="font-bold md:size-[1.8rem]" />
-              </button>
-            )}
+            {/* 삭제 버튼 - 업로드 중에도 표시 (사용자가 취소할 수 있도록) */}
+            <button
+              type="button"
+              onClick={() => handleRemoveImage(index)}
+              className="bg-opacity-70 flex-center absolute -top-[0.5rem] -right-[0.7rem] h-[2rem] w-[2rem] rounded-full bg-gray-950 text-white md:h-[2.6rem] md:w-[2.6rem]"
+            >
+              <X size={10} className="font-bold md:size-[1.8rem]" />
+            </button>
           </div>
         ))}
       </div>

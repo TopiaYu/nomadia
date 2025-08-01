@@ -26,10 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${pretendard.variable}`}>
-      <body className={`${pretendard.className} bg-background`}>
+      <body
+        className={`${pretendard.className} bg-background flex min-h-screen flex-col`}
+      >
         <Providers>
           <HeaderWrapper />
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
         </Providers>
       </body>

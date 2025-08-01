@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -24,6 +25,7 @@ const Profile = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isSubmitting, isValid, isDirty },
   } = useForm<ProfileFormType>({
     resolver: zodResolver(profileSchema),
@@ -106,7 +108,19 @@ const Profile = () => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
       router.push('/my');
     },
-    onError: () => toast.error('수정 실패'),
+    onError: (error) => {
+      if (isAxiosError(error) && error.response) {
+        if (error.response?.status === 400 && error.response.data?.message) {
+          const serverMessage = error.response.data.message;
+          setError('nickname', {
+            type: 'manual',
+            message: serverMessage,
+          });
+          return;
+        }
+      }
+      toast.error('수정 실패');
+    },
   });
 
   // 폼 제출 핸들러
@@ -165,6 +179,7 @@ const Profile = () => {
           type="email"
           disabled
           register={register}
+          className="text-gray-400"
         />
         <FormInput
           label="비밀번호"
