@@ -31,7 +31,7 @@ const BookingModal = ({
   statusLabel,
   isOpen,
 }: BookingModalProps) => {
-  const { closeModal } = useModalStore();
+  const { closeModal, setScheduleId } = useModalStore();
 
   // 예약 취소 mutation
   const { mutate: cancelBooking, isPending } = useCancelMutation();
@@ -61,6 +61,8 @@ const BookingModal = ({
   // 예약 취소 모달에서 확인 버튼 클릭 시
   const handleModalCancelBooking = () => {
     cancelBooking(reservation.id);
+    // 스케줄아이디 저장
+    setScheduleId(reservation.scheduleId);
     closeModal();
   };
 

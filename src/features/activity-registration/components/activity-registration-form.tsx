@@ -74,8 +74,6 @@ const ActivityRegistrationForm = () => {
   const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
-    console.log('폼 제출 시작:', data); // 디버깅용
-
     // 모든 스케줄의 시간 유효성 검증
     const hasInvalidSchedules = data.schedules.some((schedule) => {
       const startIndex = TIME_OPTIONS.findIndex(
@@ -106,12 +104,9 @@ const ActivityRegistrationForm = () => {
       subImageUrls: data.subImages,
     };
 
-    console.log('API 데이터:', apiData); // 디버깅용
-
     // TanStack Query mutation 실행
     try {
       await registrationMutation.mutateAsync(apiData);
-      console.log('등록 성공!'); // 디버깅용
       toast.success('체험이 등록되었습니다!');
       router.push('/activities');
     } catch (error) {

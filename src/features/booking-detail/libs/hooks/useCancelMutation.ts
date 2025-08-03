@@ -1,10 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { removeReservation } from '@/features/activityId/libs/utils/addReservation';
+import { useModalStore } from '@/shared/libs/stores/useModalStore';
+
 import { cancelBooking } from '../api/bookingApi';
 
 export const useCancelMutation = () => {
   const queryClient = useQueryClient();
+  const { scheduleId } = useModalStore();
 
   return useMutation({
     mutationFn: cancelBooking,
@@ -12,6 +16,7 @@ export const useCancelMutation = () => {
       // 예약 취소 성공 시 booking 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ['booking'] });
       toast.success('예약이 성공적으로 취소되었습니다.');
+      removeReservation(scheduleId);
     },
     onError: (error) => {
       console.error('예약 취소 실패:', error);

@@ -21,6 +21,8 @@ import {
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import CalendarForForm from '@/shared/components/calendar/components/calendar-for-form';
 import { formatDateToYMD } from '@/shared/components/calendar/libs/utils/formatDateToYMD';
+import Modal from '@/shared/components/modal/components';
+import SecondModal from '@/shared/components/modal/components/second-modal/second-modal';
 import { cn } from '@/shared/libs/cn';
 import { useCalendarStore } from '@/shared/libs/stores/useCalendarStore';
 import { useModalStore } from '@/shared/libs/stores/useModalStore';
@@ -39,22 +41,37 @@ const ReservationForm = ({
   price: number | undefined;
   activityId: number;
 }) => {
-  const { selectedDate, resetSelectedDate } = useCalendarStore();
+  const {
+    selectedDate,
+    resetSelectedDate,
+    year,
+    month,
+    setMonth,
+    setYear,
+    resetDate,
+  } = useCalendarStore();
+  const {
+    appear,
+    disappearModal,
+    appearModal,
+    isDesktop,
+    secondModalName,
+    closeSecondModal,
+    openSecondModal,
+  } = useModalStore();
   const [schedulesInDate, setSchedulesInDate] = useState<
-    TimeSlot[] | undefined[] | undefined
+    TimeSlot[] | undefined
   >([]);
-  const [selectedTime, setSelectedTime] = useState('');
-  const { appear, disappearModal, appearModal, isDesktop } = useModalStore();
-  const [nextStep, setNextStep] = useState(false);
-  const { mutate } = useReservationMutation(activityId);
-  const isTablet = useIsTablet();
-  const { year, month, setMonth, setYear } = useCalendarStore();
   const [scheduledDate, setScheduledDate] = useState<AvailableScheduleList>();
+  const [selectedTime, setSelectedTime] = useState('');
+  const [nextStep, setNextStep] = useState(false);
+  const isTablet = useIsTablet();
+  const { isLoggedIn } = useAuthStore();
+  const { mutate } = useReservationMutation(activityId);
   const { data, isLoading, error } = useSchedulesQuery(activityId, {
     year: String(year),
     month: String(month + 1).padStart(2, '0'),
   });
-  const { isLoggedIn } = useAuthStore();
 
   // 리액트훅폼
   const {
@@ -90,8 +107,9 @@ const ReservationForm = ({
       const today = new Date();
       setYear(today.getFullYear());
       setMonth(today.getMonth());
+      resetDate();
     };
-  }, [setMonth, setYear]);
+  }, [setMonth, setYear, resetDate]);
 
   return (
     <>
@@ -107,8 +125,10 @@ const ReservationForm = ({
           mutate(data, {
             onSuccess: (res) => {
               console.log('✅ 예약 성공:', res);
+              openSecondModal(undefined, 'success');
               addReservation(data.scheduleId); //save id in localStorage
-              resetSelectedDate(); //🐛이거 해도 제출후 다시 열어보면, 이전 선택 날짜가 칠해져있음...뭔가 리렌더링 기회가 없는건가
+              resetSelectedDate(); //🐛이거 해도 제출후 다시 열어보면, 이전 선택 날짜가 칠해져있음...:스타일링은 date 담당이기 떄문이었다.
+              resetDate(); //이거까지 해야함
               setSelectedTime('');
               reset(); // 제출 후 폼 초기화
             },
@@ -405,6 +425,20 @@ const ReservationForm = ({
           </button>
         </section>
       </form>
+      {secondModalName === 'success' && (
+        <SecondModal type="confirm" extraClassName="md:pb-[1rem]">
+          <Modal.Header>예약이 완료되었습니다.</Modal.Header>
+          <div className="w-[18rem] md:w-[20rem]">
+            <Modal.Button
+              color="blue"
+              ariaLabel="확인"
+              onClick={closeSecondModal}
+            >
+              확인
+            </Modal.Button>
+          </div>
+        </SecondModal>
+      )}
     </>
   );
 };

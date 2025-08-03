@@ -61,7 +61,7 @@ const CalendarForForm = ({
   const { thisMonthDays } = getMonthRange(year, month);
 
   const handleClick = (day: number) => {
-    setDate(day);
+    setDate(day); //내부 작동: 클릭한 '일' 업데이트(*이미 클릭한 날짜를 클릭하면 null로 리셋)
     setSelectedDate(year, month, day);
 
     // 스케줄 표시하는 캘린더로 사용중인 경우

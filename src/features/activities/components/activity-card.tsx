@@ -1,8 +1,8 @@
-import { Star } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import StarImage from '@/shared/components/star';
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
 import { Activity } from '@/shared/types/activity';
 
@@ -63,7 +63,7 @@ export const ActivityCard = ({
           </h3>
           {/* 별점과 리뷰 */}
           <div className="flex items-center gap-[0.2rem] md:gap-[0.3rem]">
-            <Star className="text-yellow h-[1.25rem] w-[1.25rem] md:h-[2rem] md:w-[2rem]" />
+            <StarImage extraClassName="size-[1.3rem] md:size-[2rem]" />
             <span className="text-[1.2rem] font-medium text-gray-950 md:text-[1.4rem]">
               {activity.rating}
             </span>

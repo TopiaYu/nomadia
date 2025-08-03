@@ -12,7 +12,7 @@ export const useRegistrationMutation = () => {
     onSuccess: () => {
       // 성공 시 관련 쿼리들을 무효화하여 새로고침
       queryClient.invalidateQueries({ queryKey: ['activities'] });
-      queryClient.invalidateQueries({ queryKey: ['my-activities'] });
+      queryClient.invalidateQueries({ queryKey: ['myActivities'] });
       // toast 메시지 제거 - 모달로 대체
     },
     onError: (error) => {

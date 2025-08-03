@@ -1,7 +1,8 @@
 'use client';
 
+import { AxiosError } from 'axios';
 import Image from 'next/image';
-import { notFound, useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import AddressWithMap from '@/features/activityId/components/map/address-with-map';
 import OwnerDropdown from '@/features/activityId/components/owner-drop-down';
@@ -13,30 +14,29 @@ import { useActivityIdQuery } from '@/features/activityId/libs/hooks/useActivity
 import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
 import StarImage from '@/shared/components/star';
 
-// TODO
-// 🐛 1.  calendar-for-form에서 클릭 시 id 저장하는 코드 제거하기 O
-// 3. isDesktop활용하여, 캘린더를 모달로 감싸서 사용 O
-// * mockData pageID = 5192
-
 const ActivityPage = () => {
   const { id } = useParams();
   const { data, isLoading, isError, error } = useActivityIdQuery(id);
-
-  const images = data?.subImages;
-
+  const router = useRouter();
   if (isError) {
-    console.error('에러 발생:', error);
-    if (error.message === 'Request failed with status code 404') {
-      notFound();
+    if (error instanceof AxiosError && error.response) {
+      const status = error.response.status;
+
+      if (status === 404 || status === 500) {
+        router.push('/not-found');
+      } else {
+        throw new Error(String(status));
+      }
     }
   }
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || !data) return <LoadingSpinner />;
+
   return (
     <div className="flex-center flex-col p-[2.4rem]">
       <div>
         <div className="flex flex-col gap-[2rem] md:gap-[2.4rem] lg:flex-row lg:gap-[4rem]">
-          <SubImages images={images} />
+          <SubImages images={data?.subImages} />
           <div className="relative">
             {/* 타이틀 헤더 */}
             <header className="order-2 lg:w-[41rem]">
