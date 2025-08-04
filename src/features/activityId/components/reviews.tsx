@@ -15,6 +15,7 @@ import { formatPrice } from '@/shared/libs/utils/formatPrice';
 const Reviews = ({ activityId }: { activityId: number }) => {
   const [page, setPage] = useState(1);
   const { data } = useReviewsQuery(activityId, { page: page, size: 3 });
+  const isPageNecessary = data && data.totalCount > 0;
   return (
     <>
       <section
@@ -82,7 +83,7 @@ const Reviews = ({ activityId }: { activityId: number }) => {
           );
         })}
       </ul>
-      {data?.totalCount && (
+      {isPageNecessary && (
         <Pagination
           totalPages={data?.totalCount}
           currentPage={page}

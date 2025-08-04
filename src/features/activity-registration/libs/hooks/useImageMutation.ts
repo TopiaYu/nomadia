@@ -64,8 +64,8 @@ export const validateImageFile = (
 
 /**
  * 이미지 업로드 mutation 훅
- * @author 김영현
  * @description FormData를 받아서 이미지를 업로드하는 훅
+ * @author 김영현
  * @param onSuccess - 업로드 성공 시 실행할 콜백 함수 (선택사항)
  * @param onError - 업로드 실패 시 실행할 콜백 함수 (선택사항)
  * @returns 이미지 업로드 mutation 객체
@@ -77,19 +77,12 @@ export const useImageUploadMutation = (
   return useMutation<UploadImageResponse, Error, FormData>({
     mutationFn: uploadImageApi,
     onSuccess: (data) => {
-      // 이미지 업로드 성공 시 관련 쿼리 무효화 (필요한 경우)
-      // queryClient.invalidateQueries({ queryKey: ['images'] });
-
       toast.success('이미지가 성공적으로 업로드되었습니다.');
-
-      // 성공 콜백 실행
       onSuccess?.(data);
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
       toast.error('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
-
-      // 에러 콜백 실행
       onError?.(error);
     },
   });

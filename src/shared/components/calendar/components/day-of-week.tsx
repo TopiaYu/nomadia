@@ -8,7 +8,7 @@ const DayOfWeek = ({ dayOfWeekStyle }: { dayOfWeekStyle?: string }) => {
       {days.map((day, i) => (
         <div
           key={`${i}-${day}`}
-          className={cn(defaultDayOfWeekStyle, dayOfWeekStyle)}
+          className={cn('select-none', defaultDayOfWeekStyle, dayOfWeekStyle)}
         >
           {day}
         </div>

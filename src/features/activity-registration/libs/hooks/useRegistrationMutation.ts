@@ -4,16 +4,20 @@ import { toast } from 'sonner';
 import { registrationApi } from '@/features/activity-registration/libs/api/registrationApi';
 import { ActivityRegistrationParams } from '@/shared/types/activity';
 
+/**
+ * 체험 등록 뮤테이션 훅
+ * @description 체험 등록 성공 시 관련 쿼리들을 무효화하여 새로고침
+ * @author 김영현
+ * @returns 체험 등록 뮤테이션
+ */
 export const useRegistrationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (params: ActivityRegistrationParams) => registrationApi(params),
     onSuccess: () => {
-      // 성공 시 관련 쿼리들을 무효화하여 새로고침
       queryClient.invalidateQueries({ queryKey: ['activities'] });
       queryClient.invalidateQueries({ queryKey: ['myActivities'] });
-      // toast 메시지 제거 - 모달로 대체
     },
     onError: (error) => {
       console.error('체험 등록 실패:', error);

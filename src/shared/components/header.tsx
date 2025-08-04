@@ -63,7 +63,7 @@ const Header = () => {
 
             <Dropdown
               trigger={
-                <button className="flex items-center gap-3">
+                <button className="flex cursor-pointer items-center gap-3">
                   <Image
                     src={
                       myData?.profileImageUrl ||
@@ -83,21 +83,26 @@ const Header = () => {
               }
               dropdownClassName="absolute left-1/2 -translate-x-[55%]"
             >
-              <div className="border-sub-300 txt-16-medium h-[11rem] w-[11.2rem] overflow-hidden rounded-xl border-[0.1rem] bg-white">
-                <button
-                  onClick={handleLogout}
-                  className="hover:bg-sub block h-[5.5rem] w-full rounded-t-lg"
-                >
-                  로그아웃
-                </button>
-                <Link
-                  href="/my"
-                  className="flex-center hover:bg-sub block h-[5.5rem] rounded-b-lg"
-                  onClick={() => {}}
-                >
-                  마이페이지
-                </Link>
-              </div>
+              {(close) => (
+                <div className="border-sub-300 txt-16-medium h-[11rem] w-[11.2rem] overflow-hidden rounded-xl border-[0.1rem] bg-white">
+                  <Link
+                    href="/my"
+                    className="flex-center hover:bg-sub block h-[5.5rem] rounded-b-lg"
+                    onClick={close}
+                  >
+                    마이페이지
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      close();
+                    }}
+                    className="hover:bg-sub block h-[5.5rem] w-full rounded-t-lg"
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              )}
             </Dropdown>
           </>
         ) : (

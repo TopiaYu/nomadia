@@ -7,6 +7,11 @@ interface CtaProps {
 
 import { StepCard } from './step-card';
 
+/**
+ * 랜딩페이지 하단의 cta 영역 컴포넌트
+ * @description 랜딩페이지 하단의 cta 영역 컴포넌트
+ * @author 김영현
+ */
 const Cta = ({ steps, router }: CtaProps) => (
   <div className="bg-white py-20">
     <div className="mx-auto w-full px-4 text-center">

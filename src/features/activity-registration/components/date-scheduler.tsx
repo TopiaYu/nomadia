@@ -20,6 +20,11 @@ interface DateSchedulerProps {
   formErrors?: FieldErrors<ActivityRegistrationFormData>;
 }
 
+/**
+ * 예약 가능한 시간대 스케줄러 컴포넌트
+ * @description 예약 가능한 시간대 스케줄러 컴포넌트
+ * @author 김영현
+ */
 const DateScheduler = ({
   schedules,
   onChange,

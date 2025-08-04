@@ -54,7 +54,11 @@ const Search: React.FC<SearchProps> = ({
           placeholder={isFocused ? '' : placeholder}
           className={style.input}
         />
-        <button type="button" onClick={handleSearch} className={style.button}>
+        <button
+          type="button"
+          onClick={handleSearch}
+          className={`${style.button} cursor-pointer`}
+        >
           검색하기
         </button>
       </div>

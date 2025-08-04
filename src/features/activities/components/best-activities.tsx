@@ -40,7 +40,7 @@ const BestActivities = () => {
   };
 
   return (
-    <div className="mt-[4rem] px-[2.4rem] md:mt-[6rem] md:px-[3rem] lg:px-[4rem]">
+    <div className="mt-[4rem] overflow-visible px-[2.4rem] md:mt-[6rem] md:px-[3rem] lg:px-[4rem]">
       {/* 헤더: 항상 노출 */}
       <div className="mb-[4rem] flex items-center justify-between md:mb-[1.6rem] lg:mb-[2rem]">
         <p className="flex items-center gap-2 text-[1.8rem] font-bold text-gray-950 md:text-[3.2rem]">
@@ -59,14 +59,14 @@ const BestActivities = () => {
             className="hover:bg-sub-300 border-sub rounded-full border-1 bg-white p-2 transition-colors"
             aria-label="이전"
           >
-            <ChevronLeft className="text-main h-[1.8rem] w-[1.8rem] md:h-[2.8rem] md:w-[2.8rem]" />
+            <ChevronLeft className="text-main h-[1.8rem] w-[1.8rem] cursor-pointer md:h-[2.8rem] md:w-[2.8rem]" />
           </button>
           <button
             onClick={handleNextSlide}
             className="hover:bg-sub-300 border-sub rounded-full border-1 bg-white p-2 transition-colors"
             aria-label="다음"
           >
-            <ChevronRight className="text-main h-[1.8rem] w-[1.8rem] md:h-[2.8rem] md:w-[2.8rem]" />
+            <ChevronRight className="text-main h-[1.8rem] w-[1.8rem] cursor-pointer md:h-[2.8rem] md:w-[2.8rem]" />
           </button>
         </div>
       </div>
@@ -102,11 +102,12 @@ const BestActivities = () => {
             }}
             className="best-activities !overflow-visible !px-0"
           >
-            {activities.map((activity) => (
+            {activities.map((activity, index) => (
               <SwiperSlide key={activity.id}>
                 <ActivityCard
                   activity={activity}
                   className="mb-[2.4rem] md:mb-[8rem]"
+                  isPriority={index < 4}
                 />
               </SwiperSlide>
             ))}

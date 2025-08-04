@@ -39,7 +39,7 @@ const ArrowButton = ({
     <button
       onClick={handleClick}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
-      className={cn('focus:outline-none', extraClassName)}
+      className={cn('cursor-pointer focus:outline-none', extraClassName)}
       aria-label={`${type === 'left' ? '이전' : '다음'} 달로 이동`}
     >
       <Image

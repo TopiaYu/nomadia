@@ -1,6 +1,6 @@
 'use client';
 import axios from 'axios';
-import { ArrowLeft, Minus, Plus } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -18,6 +18,7 @@ import {
   addReservation,
   getMyResertvation,
 } from '@/features/activityId/libs/utils/addReservation';
+import { formatDateToShortSlash } from '@/features/activityId/libs/utils/formatDateToShortSlash';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import CalendarForForm from '@/shared/components/calendar/components/calendar-for-form';
 import { formatDateToYMD } from '@/shared/components/calendar/libs/utils/formatDateToYMD';
@@ -143,6 +144,12 @@ const ReservationForm = ({
         })}
         className="shadow-experience-card flex flex-col overflow-auto p-[2.4rem] pb-[1.8rem] md:px-[3rem] lg:!rounded-[3rem] lg:p-[3rem]"
       >
+        {/* X 버튼 */}
+        {!isDesktop && appear && (
+          <button onClick={disappearModal}>
+            <X className="absolute top-[2.4rem] right-[2.4rem] md:right-[3rem]" />
+          </button>
+        )}
         {/* 모바일 - 스텝2(인원 체크) */}
         {!isDesktop && !isTablet && appear && nextStep && (
           <>
@@ -216,6 +223,7 @@ const ReservationForm = ({
                       'mb-[3rem] flex items-center justify-between',
                       'lg:my-[2.4rem]',
                       !isDesktop && !nextStep && 'hidden md:block',
+                      isTablet && 'flex-col items-start',
                     )}
                   >
                     <label
@@ -232,7 +240,7 @@ const ReservationForm = ({
                     >
                       <button
                         type="button"
-                        className="p-[1rem]"
+                        className="cursor-pointer p-[1rem]"
                         disabled={value <= 1}
                         onClick={() => {
                           field.onChange(value - 1);
@@ -252,7 +260,7 @@ const ReservationForm = ({
                       </p>
                       <button
                         type="button"
-                        className="p-[1rem]"
+                        className="cursor-pointer p-[1rem]"
                         onClick={() => {
                           field.onChange(value + 1);
                         }}
@@ -316,10 +324,11 @@ const ReservationForm = ({
                                   } else setSelectedTime('');
                                 }}
                                 className={cn(
-                                  'flex-center border-sub w-full rounded-[1.2rem] border-2 py-[1.4rem] text-[1.4rem] text-gray-950',
+                                  'flex-center border-sub w-full cursor-pointer rounded-[1.2rem] border-2 py-[1.4rem] text-[1.4rem] text-gray-950',
                                   isSelected &&
                                     'text-main border-sub-300 bg-sub',
-                                  didIBooked && 'bg-gray-50 text-gray-600',
+                                  didIBooked &&
+                                    'cursor-auto bg-gray-50 text-gray-600',
                                 )}
                               >
                                 {didIBooked ? (
@@ -381,8 +390,9 @@ const ReservationForm = ({
               onClick={() => !appear && appearModal()}
               type="button"
             >
-              {selectedDate} {selectedTime}
-              {/* 날짜 포맷해야함 formatToYYMMDD */}
+              {formatDateToShortSlash(selectedDate)}
+              {selectedDate && !selectedTime && ', 시간을 선택해주세요'}
+              {selectedTime}
             </button>
           </div>
 
@@ -391,11 +401,12 @@ const ReservationForm = ({
             disabled={!isLoggedIn}
             type="submit"
             className={cn(
-              isValid && isLoggedIn ? 'bg-main' : 'bg-gray-200',
-              appear && !isValid ? 'bg-gray-300' : '',
-              'mt-[1.2rem] w-full rounded-[1.4rem] py-[1.4rem] text-[1.6rem] font-bold text-white',
-              'h-[5rem] lg:mt-0 lg:w-[13.5rem]',
-              'z-100',
+              'cursor-pointer text-white',
+              !isValid && 'bg-gray-200',
+              !appear && !isDesktop && 'border-main text-main border bg-white',
+              isValid && 'bg-main text-white',
+              'mt-[1.2rem] h-[5rem] w-full rounded-[1.4rem] py-[1.4rem] text-[1.6rem] font-bold',
+              'z-100 lg:mt-0 lg:w-[13.5rem]',
             )}
             onClick={(e) => {
               if (!isDesktop) {

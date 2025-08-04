@@ -13,18 +13,23 @@ import Modal from '@/shared/components/modal/components';
 import { useModalStore } from '@/shared/libs/stores/useModalStore';
 
 /**
- * @description react-hook-form 과 함께 쓰는 공통 입력 컴포넌트
- * input, textarea, select, number 등 다양한 입력 타입을 지원합니다.
- * @param {string} label - 창 위에 표시될 라벨 텍스트
- * @param {Path<T>} name - react-hook-form에 등록할 필드의 이름
- * @param {UseFormRegister<T>} register - 부모 폼에서 전달받는 react-hook-form의 register 함수
- * @param {FieldError} [errors] - 해당 필드의 유효성 검사 에러 객체
- * @param {'input' | 'textarea' | 'select' | 'number'} inputType - 입력 요소의 타입
- * @param {Array<{value: string, label: string}>} [options] - select 타입일 때 사용할 옵션들
- * @param {number} [rows] - textarea 타입일 때 사용할 행 수
- * @param {React.InputHTMLAttributes<HTMLInputElement> | React.TextareaHTMLAttributes<HTMLTextAreaElement> | React.SelectHTMLAttributes<HTMLSelectElement>} ...rest - 표준 HTML 속성들을 그대로 전달받습니다.
+ * 공통 입력 컴포넌트
+ * @description 공통 입력 컴포넌트 (input, textarea, select, number, address)
+ * @author 김영현, 유동환
+ * @param label 창 위에 표시될 라벨 텍스트
+ * @param name react-hook-form에 등록할 필드의 이름
+ * @param register 부모 폼에서 전달받는 react-hook-form의 register 함수
+ * @param setValue 부모 폼에서 전달받는 react-hook-form의 setValue 함수
+ * @param watch 부모 폼에서 전달받는 react-hook-form의 watch 함수
+ * @param error 해당 필드의 유효성 검사 에러 객체
+ * @param inputType 입력 요소의 타입
+ * @param options select 타입일 때 사용할 옵션들
+ * @param rows textarea 타입일 때 사용할 행 수
+ * @param type 입력 요소의 타입
+ * @param placeholder 입력 요소의 플레이스홀더
+ * @param className 입력 요소의 클래스 이름
+ * @param [key: string]: unknown 기타 HTML 속성들
  */
-
 interface FormInputProps<T extends FieldValues> {
   label: string;
   name: Path<T>;

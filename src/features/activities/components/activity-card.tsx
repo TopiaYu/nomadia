@@ -9,6 +9,7 @@ import { Activity } from '@/shared/types/activity';
 interface ActivityCardProps {
   activity: Activity;
   className?: string;
+  isPriority?: boolean;
 }
 
 /**
@@ -20,6 +21,7 @@ interface ActivityCardProps {
 export const ActivityCard = ({
   activity,
   className = '',
+  isPriority = false,
 }: ActivityCardProps) => {
   const router = useRouter();
 
@@ -30,7 +32,7 @@ export const ActivityCard = ({
 
   return (
     <div
-      className={`shadow-experience-card flex h-[24.3rem] w-full cursor-pointer flex-col overflow-hidden rounded-[1.2rem] bg-white transition-transform hover:scale-[1.02] md:h-[42.3rem] md:rounded-[2.6rem] lg:h-[36.6rem] ${className}`}
+      className={`shadow-experience-card flex h-[24.3rem] w-full cursor-pointer flex-col overflow-hidden rounded-[0.8rem] bg-white transition-transform hover:scale-[1.02] md:h-[42.3rem] md:rounded-[1.8rem] lg:h-[36.6rem] ${className}`}
       onClick={handleCardClick}
       role="button"
       tabIndex={0}
@@ -47,14 +49,15 @@ export const ActivityCard = ({
           src={activity.bannerImageUrl}
           alt={activity.title}
           fill
-          className="rounded-t-3xl object-cover md:rounded-t-[2.6rem]"
+          className="rounded-t-[0.8rem] object-cover md:rounded-t-[1.8rem]"
           sizes="(max-width: 768px) 50vw, 25vw"
-          priority={false}
+          priority={isPriority}
+          quality={75}
         />
       </div>
 
       {/* 콘텐츠 영역 */}
-      <div className="flex flex-1 flex-col rounded-[1.2rem] px-[1.7rem] py-[1.2rem] md:z-10 md:rounded-t-[2.6rem] md:bg-white md:px-[3rem] md:py-[2rem] lg:px-[2.8rem] lg:py-[2.4rem]">
+      <div className="flex flex-1 flex-col rounded-[0.8rem] px-[1.7rem] py-[1.2rem] md:z-10 md:rounded-t-[1.8rem] md:bg-white md:px-[3rem] md:py-[2rem] lg:px-[2.8rem] lg:py-[2.4rem]">
         {/* 제목과 별점 그룹 */}
         <div className="mt-[0.5rem] flex flex-col gap-[0.6rem]">
           {/* 제목 */}

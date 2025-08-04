@@ -1,9 +1,10 @@
 'use client';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Sidebar from '@/features/my/components/sidebar';
+import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
 import useWindowSize from '@/shared/libs/hooks/useWindowSize';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -21,10 +22,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isMyPageRoot = pathname === '/my';
   const isActivityRegistration =
     pathname === '/my/my-activities/activity-registration';
+  const isActivityEdit = pathname.startsWith('/my/my-activities/activity-edit');
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleBackClick = () => {
     router.back();
   };
+
+  if (!isClient) {
+    return (
+      <div className="flex-center h-screen w-full">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -48,7 +63,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <aside
         className={
-          (isMobile && !isMyPageRoot) || isActivityRegistration ? 'hidden' : ''
+          (isMobile && !isMyPageRoot) ||
+          isActivityRegistration ||
+          isActivityEdit
+            ? 'hidden'
+            : ''
         }
       >
         <Sidebar />

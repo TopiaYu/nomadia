@@ -44,7 +44,7 @@ export const Button = ({
   return (
     <button
       className={cn(
-        'flex-center rounded-[1.2rem] text-[1.4rem] md:rounded-[1.4rem] md:text-[1.6rem]',
+        'flex-center cursor-pointer rounded-[1.2rem] text-[1.4rem] md:rounded-[1.4rem] md:text-[1.6rem]',
         modalButtonColorClasses[color],
         modalButtonClasses[modalType],
         extraClassName,

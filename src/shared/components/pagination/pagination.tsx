@@ -51,7 +51,7 @@ const Pagination = ({
   setPage,
   className = '',
 }: PaginationProps) => {
-  if (totalPages <= 0) return null;
+  if (totalPages <= 0) return;
 
   const PAGE_GROUP_SIZE = 5;
   const pageGroupNum = Math.ceil(currentPage / PAGE_GROUP_SIZE);
@@ -93,7 +93,7 @@ const Pagination = ({
           aria-label={`${page}페이지 ${page === currentPage ? '(현재 페이지)' : ''}`}
           aria-current={page === currentPage ? 'page' : undefined}
           className={cn(
-            'size-[4rem] text-[1.4rem] font-medium text-gray-300',
+            'size-[4rem] cursor-pointer text-[1.4rem] font-medium text-gray-300',
             page === currentPage &&
               'border-b-main border-b-2 font-bold text-gray-950',
           )}

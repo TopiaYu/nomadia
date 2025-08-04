@@ -2,6 +2,10 @@ import Image from 'next/image';
 import React from 'react';
 
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
+import {
+  generateResponsiveSizes,
+  optimizeImageQuality,
+} from '@/shared/libs/utils/imageOptimization';
 
 import { Reservation } from '../libs/types/booking';
 import {
@@ -20,13 +24,13 @@ interface BookingCardProps {
   onCancelClick?: () => void;
   onReviewClick?: () => void;
   onModalClose?: () => void;
+  isPriority?: boolean;
 }
 
 /**
+ * 예약 카드 UI 컴포넌트 - 순수한 렌더링만 담당
  * @description 예약 카드 UI 컴포넌트 - 순수한 렌더링만 담당
- *
  * @author 김영현
- *
  * @param reservation 예약 정보
  * @param showDate 날짜 표시 여부
  * @param showDivider 구분선 표시 여부
@@ -43,6 +47,7 @@ const BookingCard = ({
   onCancelClick,
   onReviewClick,
   onModalClose,
+  isPriority = false,
 }: BookingCardProps) => {
   const statusLabel = getStatusLabel(reservation.status);
   const statusColorClass = getStatusColorClass(reservation.status);
@@ -64,9 +69,15 @@ const BookingCard = ({
             src={reservation.activity.bannerImageUrl}
             alt={reservation.activity.title}
             fill
-            quality={90}
-            loading="lazy"
+            quality={optimizeImageQuality(isPriority)}
+            priority={isPriority}
+            loading={isPriority ? undefined : 'lazy'}
             className="size-[13.6rem] object-cover md:size-[14rem] lg:size-[18.1rem]"
+            sizes={generateResponsiveSizes({
+              mobile: '100vw',
+              tablet: '50vw',
+              desktop: '25vw',
+            })}
           />
         </div>
 

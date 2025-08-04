@@ -9,12 +9,10 @@ interface BookingCardActionsProps {
 }
 
 /**
+ * 예약 카드의 액션 버튼들을 렌더링하는 컴포넌트
  * @description 예약 카드의 액션 버튼들을 렌더링하는 컴포넌트
- *
  * @author 김영현
- *
  * @param reservation 예약 정보
- * @param statusLabel 예약 상태 라벨
  * @param onCancelClick 예약 취소 클릭 시 콜백
  * @param onReviewClick 후기 작성 클릭 시 콜백
  */

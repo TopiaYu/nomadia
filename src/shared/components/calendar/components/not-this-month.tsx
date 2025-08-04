@@ -11,7 +11,7 @@ const NotThisMonth = ({
   return daysArray.map((date) => (
     <div
       key={`lead-${date}`}
-      className={cn(defaultCellStyle, cellStyle, 'text-gray-300')}
+      className={cn(defaultCellStyle, cellStyle, 'text-gray-300 select-none')}
     >
       {date}
     </div>

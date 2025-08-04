@@ -78,7 +78,7 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
         </p>
         <Dropdown
           trigger={
-            <button className="txt-14-medium flex items-center text-black">
+            <button className="flex cursor-pointer items-center text-[1.6rem] font-medium text-black">
               {selectedSortLabel} <ChevronDown size={20} className="ml-1" />
             </button>
           }
@@ -93,7 +93,7 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
                     value as 'latest' | 'price_asc' | 'price_desc',
                   )
                 }
-                className={`txt-14-medium h-[4.1rem] w-full px-[1rem] py-[0.6rem] hover:bg-blue-50 ${
+                className={`txt-14-medium h-[4.1rem] w-full cursor-pointer px-[1rem] py-[0.6rem] hover:bg-blue-50 ${
                   selectedSort === value ? 'text-main font-bold' : 'text-black'
                 }`}
               >
@@ -110,7 +110,7 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
             key={name}
             variant={active === name ? 'selected' : 'default'}
             size="sm"
-            className="group"
+            className="group cursor-pointer"
             onClick={() => handleCategoryChange(name)}
           >
             <Icon
@@ -130,8 +130,12 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
           ) : isError ? (
             <ErrorMessage className="col-span-2 lg:col-span-4" />
           ) : (
-            activities.map((activity) => (
-              <ActivityCard key={activity.id} activity={activity} />
+            activities.map((activity, index) => (
+              <ActivityCard
+                key={activity.id}
+                activity={activity}
+                isPriority={index < 8}
+              />
             ))
           )}
         </div>

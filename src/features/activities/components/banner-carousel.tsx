@@ -99,6 +99,7 @@ const BannerCarousel = () => {
                   fill
                   className="object-cover"
                   priority={idx === 0}
+                  quality={idx === 0 ? 85 : 75}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 112rem"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/90 to-transparent p-2 transition-opacity duration-700 md:p-8 lg:p-12">

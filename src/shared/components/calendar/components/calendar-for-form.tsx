@@ -112,7 +112,7 @@ const CalendarForForm = ({
               onKeyDown={(e) => e.key === 'Enter' && handleClick(day)}
               onClick={() => handleClick(day)}
               className={cn(
-                'flex-center hover:bg-sub',
+                'flex-center hover:bg-sub cursor-pointer',
                 defaultCellStyle,
                 cellStyle,
                 hasSchedule && 'text-main',

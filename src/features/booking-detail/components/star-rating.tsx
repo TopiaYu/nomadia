@@ -5,6 +5,12 @@ interface StarRatingProps {
   onRatingChange?: (rating: number) => void;
 }
 
+/**
+ * 별점 평가 컴포넌트
+ * @description 별점 평가 컴포넌트
+ * @author 김영현
+ * @param onRatingChange 별점 변경 시 콜백
+ */
 const StarRating = ({ onRatingChange }: StarRatingProps) => {
   const [rating, setRating] = useState(0);
   const [hovered, setHovered] = useState(0);

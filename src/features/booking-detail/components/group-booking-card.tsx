@@ -32,7 +32,7 @@ const GroupedBookingCards = ({ reservations }: GroupedBookingsProps) => {
 
   return (
     <div className="flex flex-col gap-[2rem]">
-      {sortedDates.map((date) => (
+      {sortedDates.map((date, dateIndex) => (
         <div key={date} className="flex flex-col gap-[1.2rem]">
           {/* 날짜 헤더 - 한 번만 표시 */}
           <div className="text-[1.6rem] font-bold text-gray-800 md:text-[1.8rem]">
@@ -47,6 +47,7 @@ const GroupedBookingCards = ({ reservations }: GroupedBookingsProps) => {
                 reservation={reservation}
                 showDate={false} // 그룹 내에서는 날짜를 표시하지 않음
                 showDivider={index === groupedReservations[date].length - 1}
+                isPriority={dateIndex === 0 && index === 0} // 첫 번째 날짜의 첫 번째 카드만 우선순위
               />
             ))}
           </div>

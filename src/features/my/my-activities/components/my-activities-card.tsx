@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { useModalStore } from '@/shared/libs/stores/useModalStore';
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
@@ -6,8 +7,15 @@ import { formatPrice } from '@/shared/libs/utils/formatPrice';
 import { MyActivitiesCardProps } from '../lib/types/types';
 const MyActivitiesCard = ({ activity }: MyActivitiesCardProps) => {
   const { openModal } = useModalStore();
+  const router = useRouter();
+
   const handleDelete = () => {
+    console.log(typeof activity.id);
     openModal(activity.id);
+  };
+
+  const hadnleEdit = () => {
+    router.push(`/my/my-activities/activity-edit/${activity.id}`);
   };
   return (
     <article className="shadow-experience-card mb-[3rem] flex justify-between rounded-[2.4rem] bg-white p-[2.4rem] lg:mb-[2.4rem] lg:items-center lg:p-[3rem]">
@@ -43,11 +51,14 @@ const MyActivitiesCard = ({ activity }: MyActivitiesCardProps) => {
           </div>
         </div>
         <div className="flex gap-[0.8rem]">
-          <button className="h-[2.9rem] w-[6.8rem] cursor-pointer rounded-[0.8rem] border border-gray-50 text-[1.4rem] font-medium text-gray-600 transition-colors hover:bg-gray-200 hover:text-white">
+          <button
+            className="h-[2.9rem] w-[6.8rem] cursor-pointer rounded-[0.8rem] border border-gray-50 text-[1.4rem] font-medium text-gray-600 transition-colors hover:bg-gray-50"
+            onClick={hadnleEdit}
+          >
             수정하기
           </button>
           <button
-            className="h-[2.9rem] w-[6.8rem] cursor-pointer rounded-[0.8rem] bg-gray-50 text-[1.4rem] font-medium text-gray-600 transition-colors hover:bg-gray-200 hover:text-red-500"
+            className="h-[2.9rem] w-[6.8rem] cursor-pointer rounded-[0.8rem] bg-gray-50 text-[1.4rem] font-medium text-red-500 transition-colors hover:bg-gray-100"
             onClick={handleDelete}
           >
             삭제하기

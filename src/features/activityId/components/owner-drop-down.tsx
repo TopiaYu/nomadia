@@ -23,7 +23,6 @@ const OwnerDropdown = ({
   const {
     openSecondModal,
     closeSecondModal,
-
     activityId_secondModal,
     secondModalName,
   } = useModalStore();
@@ -58,14 +57,17 @@ const OwnerDropdown = ({
                 width={28}
                 height={28}
                 alt={'more-options'}
+                className="cursor-pointer"
               />
             </button>
           }
         >
           <div className="border-sub-300 h-[10.8rem] overflow-hidden rounded-[0.8rem] border bg-white">
             <button
-              onClick={() => router.push('/my/my-activities/')}
-              className="hover:text-main hover:bg-sub h-[5.4rem] w-[9.3rem] px-[1.8rem] text-[1.6rem]"
+              onClick={() =>
+                router.push(`/my/my-activities/activity-edit/${activityId}`)
+              }
+              className="hover:text-main hover:bg-sub h-[5.4rem] w-[9.3rem] cursor-pointer px-[1.8rem] text-[1.6rem]"
             >
               수정하기
             </button>
@@ -74,7 +76,7 @@ const OwnerDropdown = ({
               onClick={() => {
                 openSecondModal(activityId, 'delete');
               }}
-              className="h-[5.4rem] w-[9.3rem] px-[1.8rem] text-[1.6rem] hover:bg-red-100 hover:text-red-500"
+              className="h-[5.4rem] w-[9.3rem] cursor-pointer px-[1.8rem] text-[1.6rem] hover:bg-red-100 hover:text-red-500"
             >
               삭제하기
             </button>

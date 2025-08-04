@@ -25,7 +25,8 @@ interface ImageUploadBaseProps {
 
 /**
  * 공통 이미지 업로드 베이스 컴포넌트
- * 단일/다중 이미지 업로드를 모두 지원
+ * @description 단일/다중 이미지 업로드를 모두 지원
+ * @author 김영현
  */
 const ImageUploadBase = ({
   label,

@@ -45,8 +45,12 @@ const SearchResults = ({ keyword }: SearchResultProps) => {
           {activities.length > 0 ? (
             <>
               <div className="grid grid-cols-2 gap-x-[1.8rem] gap-y-[2.4rem] md:gap-x-6 md:gap-y-[2.4rem] lg:grid-cols-4 lg:gap-x-[3rem] lg:gap-y-[2.4rem]">
-                {activities.map((activity) => (
-                  <ActivityCard key={activity.id} activity={activity} />
+                {activities.map((activity, index) => (
+                  <ActivityCard
+                    key={activity.id}
+                    activity={activity}
+                    isPriority={index < 8}
+                  />
                 ))}
               </div>
               <Pagination

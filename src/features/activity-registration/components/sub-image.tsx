@@ -11,7 +11,8 @@ interface SubImageUploadProps {
 
 /**
  * 소개 이미지 업로드 컴포넌트
- * 최대 4장까지 업로드 가능하며, 공통 베이스 컴포넌트를 활용
+ * @description 최대 4장까지 업로드 가능하며, 공통 베이스 컴포넌트를 활용
+ * @author 김영현
  */
 const SubImageUpload = ({
   label,

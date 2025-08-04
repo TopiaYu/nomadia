@@ -14,6 +14,11 @@ import { steps } from '../libs/constants/data';
 import Cta from './cta';
 import Hero from './hero';
 
+/**
+ * 랜딩페이지 컴포넌트
+ * @description 랜딩페이지 컴포넌트
+ * @author 김영현
+ */
 const LandingPage = () => {
   const router = useRouter();
   const swiperRef = useRef<SwiperType | null>(null);

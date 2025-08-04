@@ -15,6 +15,11 @@ interface HeroProps {
   router: ReturnType<typeof import('next/navigation').useRouter>;
 }
 
+/**
+ * 랜딩페이지 상단의 히어로 영역 컴포넌트
+ * @description 랜딩페이지 상단의 히어로 영역 컴포넌트
+ * @author 김영현
+ */
 const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
   const { data, isLoading, isError } = useActivity({
     sort: 'most_reviewed',
