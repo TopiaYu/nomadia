@@ -1,9 +1,11 @@
-import { ParamValue } from 'next/dist/server/request/params';
-
 import ActivityEditForm from '@/features/my/activity-edit/components/activity-edit-form';
 
-const ActivityEditPage = async ({ params }: { params: { id: ParamValue } }) => {
-  const activityId = params.id;
+const ActivityEditPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id: activityId } = await params;
   return (
     <main>
       <div className="my-[1rem] flex w-full gap-[0.4rem]">

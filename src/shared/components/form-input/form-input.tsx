@@ -126,10 +126,10 @@ export const FormInput = <T extends FieldValues>({
             placeholder={placeholder}
             {...register(name, {
               setValueAs: (value) => {
-                if (!value || value.trim() === '') {
+                if (!value || String(value).trim() === '') {
                   return undefined;
                 }
-                const num = parseInt(value, 10);
+                const num = parseInt(String(value), 10);
                 return isNaN(num) ? undefined : num;
               },
             })}

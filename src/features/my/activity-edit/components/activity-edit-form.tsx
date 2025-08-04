@@ -92,7 +92,7 @@ const ActivityEditForm = ({ activityId }: ActivityEditFormProps) => {
             category: data.category,
             description: data.description,
             address: data.address,
-            price: String(data.price), // formInput 수정 필요해보임
+            price: Number(data.price),
             bannerImages: data.bannerImageUrl,
             subImages: data.subImages.map((img) => img.imageUrl),
             schedules: data.schedules.map((schedule) => ({
