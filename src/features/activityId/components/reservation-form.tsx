@@ -69,6 +69,7 @@ const ReservationForm = ({
   const isTablet = useIsTablet();
   const { isLoggedIn } = useAuthStore();
   const { mutate } = useReservationMutation(activityId);
+  const [countUpdateForRender, setCountUpdateForRender] = useState(1); // 이후 리팩토링 시 - 필드값 수정하는거 제거하고, 이 상태값을 필드에 연결하는거로 변경
   const { data, isLoading, error } = useSchedulesQuery(activityId, {
     year: String(year),
     month: String(month + 1).padStart(2, '0'),
@@ -91,7 +92,6 @@ const ReservationForm = ({
     const today = formatDateToYMD(new Date());
     const notYetPassed = data?.filter((schedule) => schedule.date >= today);
     setScheduledDate(notYetPassed);
-    console.log(today);
   }, [data, isLoading, error]);
 
   // 선택한 날짜가 바뀌면, 이전에 선택한 스케줄을 취소함. 새로운 날짜에 스케줄이 존재하면 TimeSlot선택지를 보여주기 위해 schedulesInDate 업데이트
@@ -108,9 +108,10 @@ const ReservationForm = ({
       const today = new Date();
       setYear(today.getFullYear());
       setMonth(today.getMonth());
+      resetSelectedDate();
       resetDate();
     };
-  }, [setMonth, setYear, resetDate]);
+  }, [setMonth, setYear, resetDate, resetSelectedDate]);
 
   return (
     <>
@@ -122,10 +123,8 @@ const ReservationForm = ({
       <form
         // data: { scheduleId, headCount }
         onSubmit={handleSubmit((data) => {
-          console.log('제출', data, typeof getValues('scheduleId'));
           mutate(data, {
-            onSuccess: (res) => {
-              console.log('✅ 예약 성공:', res);
+            onSuccess: () => {
               openSecondModal(undefined, 'success');
               addReservation(data.scheduleId); //save id in localStorage
               resetSelectedDate(); //🐛이거 해도 제출후 다시 열어보면, 이전 선택 날짜가 칠해져있음...:스타일링은 date 담당이기 떄문이었다.
@@ -134,7 +133,6 @@ const ReservationForm = ({
               reset(); // 제출 후 폼 초기화
             },
             onError: (err) => {
-              console.error('❌ 예약 실패:', err);
               if (axios.isAxiosError(err)) {
                 const errorMessage = err.response?.data.message;
                 toast.error(`<예약 실패>❗️ ${errorMessage}`);
@@ -244,6 +242,7 @@ const ReservationForm = ({
                         disabled={value <= 1}
                         onClick={() => {
                           field.onChange(value - 1);
+                          setCountUpdateForRender((prev) => prev - 1);
                         }}
                       >
                         <Minus strokeWidth={1.5} size={20} />
@@ -263,6 +262,7 @@ const ReservationForm = ({
                         className="cursor-pointer p-[1rem]"
                         onClick={() => {
                           field.onChange(value + 1);
+                          setCountUpdateForRender((prev) => prev + 1);
                         }}
                       >
                         <Plus strokeWidth={1.5} size={20} />
@@ -375,7 +375,7 @@ const ReservationForm = ({
               )}
               {price && (
                 <span className="inline-block text-[1.8rem] leading-none font-bold text-gray-950">
-                  ₩{formatPrice(price * getValues('headCount'))}
+                  ₩{formatPrice(price * countUpdateForRender)}
                 </span>
               )}
               {!isDesktop && (
@@ -390,9 +390,9 @@ const ReservationForm = ({
               onClick={() => !appear && appearModal()}
               type="button"
             >
-              {formatDateToShortSlash(selectedDate)}
+              {selectedDate &&
+                `${formatDateToShortSlash(selectedDate)}  ${selectedTime}`}
               {selectedDate && !selectedTime && ', 시간을 선택해주세요'}
-              {selectedTime}
             </button>
           </div>
 

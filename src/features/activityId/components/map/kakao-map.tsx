@@ -30,24 +30,20 @@ const KakaoMap = ({ address }: { address: string | undefined }) => {
         typeof window.kakao.maps === 'undefined' ||
         typeof window.kakao.maps.services === 'undefined'
       ) {
-        console.warn('지도 services 아직 준비되지 않음... 재시도 중');
         if (retryCount < maxRetries) {
           retryCount += 1;
           setTimeout(tryGeocode, 300); // 300ms 후 재시도
         } else {
-          console.error('kakao.maps.services 로딩 실패: 최대 재시도 초과');
+          throw new Error('kakao.maps.services 로딩 실패: 최대 재시도 초과');
         }
         return;
       }
 
       const geocoder = new kakao.maps.services.Geocoder();
       geocoder.addressSearch(address, (result, status) => {
-        console.log('geocode result', result, status);
         if (status === kakao.maps.services.Status.OK) {
           const { x, y } = result[0];
           setCoordinates({ lat: parseFloat(y), lng: parseFloat(x) });
-        } else {
-          console.error('주소 검색 실패:', address, status);
         }
       });
     };

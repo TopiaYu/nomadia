@@ -13,7 +13,7 @@ const ReservationModal = ({
       {/* AdaptiveModal 사용 */}
       <AdaptiveModal
         extraClassName="h-fit p-0"
-        translateY={'translate-y-[calc(100%-124px)]'}
+        translateY={'translate-y-[calc(100%-132px)]'}
       >
         <ReservationForm price={price} activityId={activityId} />
       </AdaptiveModal>
