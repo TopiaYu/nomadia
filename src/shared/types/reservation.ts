@@ -19,5 +19,17 @@ export type Reservation = {
 
 export type MonthReservations = {
   date: string;
-  reservations: Reservation[];
+  schedules: {
+    id: string;
+    userId: number;
+    nickname: string;
+    scheduleId: number;
+    startTime: string;
+    endTime: string;
+    count: {
+      declined: number;
+      confirmed: number;
+      pending: number;
+    };
+  }[];
 };

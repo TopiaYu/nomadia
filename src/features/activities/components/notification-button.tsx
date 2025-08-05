@@ -1,40 +1,35 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useNotifications } from '@/features/activities/libs/hooks/useNotifications';
-// import NotificationModal from '@/shared/components/modal/components/notification-modal';
-// import { useModalStore } from '@/shared/libs/stores/useModalStore';
+import NotificationModal from '@/shared/components/modal/components/notification-modal';
+import { useNotificationStore } from '@/shared/libs/stores/useNotificationStore';
 
 const NotificationButton = () => {
   const ref = useRef<HTMLDivElement>(null);
-
-  // const { isNotificationOpen, openNotification, closeNotification } =
-  //   useModalStore();
+  const { isNotificationOpen, openNotification, closeNotification } =
+    useNotificationStore();
 
   const { data } = useNotifications();
   const hasNotifications =
     data?.pages?.some((page) => page.notifications.length > 0) ?? false;
 
-  // useEffect(() => {
-  //   const handler = (e: MouseEvent) => {
-  //     if (ref.current && !ref.current.contains(e.target as Node)) {
-  //       closeNotification();
-  //     }
-  //   };
-  //   document.addEventListener('mousedown', handler);
-  //   return () => document.removeEventListener('mousedown', handler);
-  // }, [closeNotification]);
+  // 바깥 클릭 시 모달 닫기
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        closeNotification();
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [closeNotification]);
 
   return (
     <div className="relative" ref={ref}>
-      <button
-        // onClick={() =>
-        //   isNotificationOpen ? closeNotification() : openNotification()
-        // }
-        className="cursor-pointer rounded p-2"
-      >
+      <button className="cursor-pointer rounded p-2" onClick={openNotification}>
         <Image
           src={
             hasNotifications
@@ -46,11 +41,9 @@ const NotificationButton = () => {
           height={24}
         />
       </button>
-      {/* {isNotificationOpen && <NotificationModal />} */}
+      {isNotificationOpen && <NotificationModal />}
     </div>
   );
 };
 
 export default NotificationButton;
-
-//주석처리 필요(?)

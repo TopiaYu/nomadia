@@ -97,7 +97,7 @@ const Header = () => {
                       handleLogout();
                       close();
                     }}
-                    className="hover:bg-sub block h-[5.5rem] w-full rounded-t-lg"
+                    className="hover:bg-sub block h-[5.5rem] w-full cursor-pointer rounded-t-lg"
                   >
                     로그아웃
                   </button>
