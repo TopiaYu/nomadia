@@ -57,7 +57,8 @@ const CalendarForForm = ({
   isForReservation?: boolean;
   changeFormValue?: () => void;
 }) => {
-  const { setDate, setSelectedDate, year, month, date } = useCalendarStore();
+  const { setDate, setSelectedDate, year, month, selectedDate } =
+    useCalendarStore();
   const { thisMonthDays } = getMonthRange(year, month);
 
   const handleClick = (day: number) => {
@@ -100,30 +101,30 @@ const CalendarForForm = ({
         {/* children */}
         {thisMonthDays.map((day) => {
           const dateStr = formatDateToYMD(new Date(year, month, day));
+          const isSelected = dateStr === selectedDate;
           const hasSchedule = scheduleArray?.find(
             (schedule) => schedule.date === dateStr,
           );
-          const isSelected = day === date; //--> bg-main 적용
 
           return (
             <button
+              disabled={!hasSchedule}
               type="button"
               key={day}
               onKeyDown={(e) => e.key === 'Enter' && handleClick(day)}
               onClick={() => handleClick(day)}
               className={cn(
-                'flex-center hover:bg-sub cursor-pointer',
+                'flex-center text-gray-300',
                 defaultCellStyle,
                 cellStyle,
-                hasSchedule && 'text-main',
-                isSelected && 'text-white',
+                hasSchedule &&
+                  'hover:text-main cursor-pointer text-gray-800 transition hover:scale-110',
+                isSelected && 'text-white hover:text-white',
               )}
             >
               {day}
+              {hasSchedule && <div className={cn(selectedCircle, 'bg-sub')} />}
               {isSelected && <div className={cn(selectedCircle, 'bg-main')} />}
-              {hasSchedule && (
-                <div className={cn(selectedCircle, 'bg-sub -z-2')} />
-              )}
             </button>
           );
         })}

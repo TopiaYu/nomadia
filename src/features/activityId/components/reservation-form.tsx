@@ -1,6 +1,7 @@
 'use client';
 import axios from 'axios';
 import { ArrowLeft, Minus, Plus, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -74,6 +75,7 @@ const ReservationForm = ({
     year: String(year),
     month: String(month + 1).padStart(2, '0'),
   });
+  const router = useRouter();
 
   // 리액트훅폼
   const {
@@ -398,7 +400,6 @@ const ReservationForm = ({
 
           {/* 예약하기/확인 버튼 */}
           <button
-            disabled={!isLoggedIn}
             type="submit"
             className={cn(
               'cursor-pointer text-white',
@@ -409,6 +410,10 @@ const ReservationForm = ({
               'z-100 lg:mt-0 lg:w-[13.5rem]',
             )}
             onClick={(e) => {
+              if (!isLoggedIn) {
+                openSecondModal(undefined, 'need-login');
+                return;
+              }
               if (!isDesktop) {
                 if (!appear && !isValid) {
                   appearModal();
@@ -446,6 +451,30 @@ const ReservationForm = ({
               onClick={closeSecondModal}
             >
               확인
+            </Modal.Button>
+          </div>
+        </SecondModal>
+      )}
+      {secondModalName === 'need-login' && (
+        <SecondModal type="warning" extraClassName="md:pb-[1rem]">
+          <Modal.Header>로그인이 필요합니다.</Modal.Header>
+          <div className="mb-0 flex w-[23.4rem] gap-2 md:w-[28.2rem] md:gap-3">
+            <Modal.Button
+              color="white"
+              ariaLabel="취소"
+              onClick={closeSecondModal}
+            >
+              취소
+            </Modal.Button>
+            <Modal.Button
+              color="blue"
+              ariaLabel="로그인하기"
+              onClick={() => {
+                router.push('/login');
+                closeSecondModal();
+              }}
+            >
+              로그인 하기
             </Modal.Button>
           </div>
         </SecondModal>
