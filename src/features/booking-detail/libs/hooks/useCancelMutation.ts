@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { useScheduleIdStore } from '@/features/activityId/libs/stores/useScheduleIdStore';
 import { removeReservation } from '@/features/activityId/libs/utils/addReservation';
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
 
 import { cancelBooking } from '../api/bookingApi';
 
 export const useCancelMutation = () => {
   const queryClient = useQueryClient();
-  const { scheduleId } = useModalStore();
+  const { scheduleId } = useScheduleIdStore();
 
   return useMutation({
     mutationFn: cancelBooking,

@@ -3,11 +3,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postReservationForm } from '@/features/activityId/libs/api/postReservationForm';
 import { ReservationRequestBody } from '@/features/activityId/libs/types/reservationType';
 
-export const useReservationMutation = (activityId: number) => {
+interface ReservationVariables {
+  activityId: number;
+  body: ReservationRequestBody;
+}
+
+export const useReservationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: ReservationRequestBody) =>
+    mutationFn: ({ activityId, body }: ReservationVariables) =>
       postReservationForm(activityId, body),
     onSuccess: () => {
       queryClient.invalidateQueries({

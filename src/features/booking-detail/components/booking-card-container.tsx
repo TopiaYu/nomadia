@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
+import { useScheduleIdStore } from '@/features/activityId/libs/stores/useScheduleIdStore';
+import { useReservationIdStore } from '@/features/booking-detail/libs/stores/useReservationIdStore';
+import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 
 import { Reservation } from '../libs/types/booking';
 import BookingCard from './booking-card';
@@ -26,21 +28,23 @@ const BookingCardContainer = ({
   showDivider = true,
   isPriority = false,
 }: BookingCardContainerProps) => {
-  const { isModalOpen, activeReservationId, openModal, closeModal } =
-    useModalStore();
+  const { isModalOpen, openModal, closeModal } = useModalStore();
+  const { reservationId, setReservationId } = useReservationIdStore();
+  const { setScheduleId } = useScheduleIdStore();
 
   // 현재 카드의 모달인지 확인
-  const isCurrentCardModal =
-    isModalOpen && activeReservationId === reservation.id;
+  const isCurrentCardModal = isModalOpen && reservationId === reservation.id;
 
   // 예약 취소 버튼 클릭 시 현재 예약 ID와 함께 모달 열기
   const handleCancelClick = () => {
-    openModal(reservation.id);
+    setReservationId(reservation.id);
+    setScheduleId(reservation.scheduleId);
+    openModal();
   };
 
   // 후기 작성 버튼 클릭 시 모달 열기
   const handleReviewClick = () => {
-    openModal(reservation.id);
+    setReservationId(reservation.id);
   };
 
   return (

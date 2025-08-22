@@ -45,6 +45,7 @@ export interface ActivityRegistrationParams extends ActivityBase {
  */
 export interface Activity extends ActivityBase {
   id: number;
+  teamId: string;
   userId: number;
   rating: number;
   reviewCount: number;

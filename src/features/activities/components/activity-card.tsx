@@ -2,7 +2,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import StarImage from '@/shared/components/star';
+import EmptyStarImage from '@/shared/components/empty-star/empty-star';
+import StarImage from '@/shared/components/star/star';
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
 import { Activity } from '@/shared/types/activity';
 
@@ -61,28 +62,61 @@ export const ActivityCard = ({
         {/* 제목과 별점 그룹 */}
         <div className="mt-[0.5rem] flex flex-col gap-[0.6rem]">
           {/* 제목 */}
-          <h3 className="line-clamp-1 text-[1.4rem] leading-[1.8rem] font-semibold text-gray-900 md:overflow-hidden md:text-[1.8rem] md:text-ellipsis md:whitespace-nowrap">
+          <h3 className="line-clamp-1 text-[1.4rem] leading-[1.8rem] font-semibold text-gray-900 md:overflow-hidden md:text-[1.6rem] md:text-ellipsis md:whitespace-nowrap">
             {activity.title}
           </h3>
-          {/* 별점과 리뷰 */}
-          <div className="flex items-center gap-[0.2rem] md:gap-[0.3rem]">
-            <StarImage extraClassName="size-[1.3rem] md:size-[2rem]" />
-            <span className="text-[1.2rem] font-medium text-gray-950 md:text-[1.4rem]">
-              {activity.rating}
-            </span>
-            <span className="text-[1.2rem] font-medium text-gray-400 md:text-[1.4rem]">
-              ({activity.reviewCount})
-            </span>
+
+          {/* 별점, 리뷰 정보 */}
+          <div className="mt-[0.3rem] flex min-h-[1.8rem] items-center justify-between">
+            {/* 왼쪽: 별점과 리뷰 정보 */}
+            <div className="flex items-center gap-[0.2rem]">
+              {/* 별점 */}
+              <div className="flex items-center">
+                {Array.from({ length: 5 }, (_, idx) =>
+                  activity.rating && idx < activity.rating ? (
+                    <StarImage
+                      key={idx}
+                      extraClassName="size-[1.2rem] md:size-[1.6rem]"
+                    />
+                  ) : (
+                    <EmptyStarImage
+                      key={idx}
+                      extraClassName="size-[1.2rem] md:size-[1.6rem]"
+                    />
+                  ),
+                )}
+              </div>
+
+              {/* Dot 구분자 */}
+              <span className="text-[1rem] text-gray-400 md:text-[1.4rem]">
+                •
+              </span>
+
+              {/* 별점 상세 점수 표기(소수점 한자리까지) */}
+              {activity.reviewCount && activity.reviewCount > 0 ? (
+                <span className="text-[1.2rem] font-bold text-gray-800 md:text-[1.4rem]">
+                  {(activity.rating * 2).toFixed(1)}
+                </span>
+              ) : (
+                ''
+              )}
+
+              <span className="mr-[0.3rem]">
+                <span className="text-[1.2rem] font-medium text-gray-600 md:text-[1.4rem]">
+                  ({activity.reviewCount})
+                </span>
+              </span>
+            </div>
           </div>
         </div>
 
         {/* 가격 */}
-        <div className="mt-[2rem] flex items-baseline gap-1">
+        <div className="mt-[2rem] flex justify-start gap-1">
           <span className="text-[1.5rem] leading-[1.8rem] font-bold text-gray-950 md:text-[1.8rem]">
-            ₩ {formatPrice(activity.price)}
-          </span>
-          <span className="text-[1.2rem] font-semibold text-gray-400 md:text-[1.6rem]">
-            /인
+            ₩ {formatPrice(activity.price)}{' '}
+            <span className="text-[1.2rem] font-semibold text-gray-400 md:text-[1.6rem]">
+              /인
+            </span>
           </span>
         </div>
       </div>

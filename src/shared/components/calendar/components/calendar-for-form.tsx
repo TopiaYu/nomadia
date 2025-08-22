@@ -1,15 +1,15 @@
 import { AvailableScheduleList } from '@/features/activityId/libs/types/availableSchedule';
-import ArrowButton from '@/shared/components/calendar/components/arrow-button';
-import DaysOfMonth from '@/shared/components/calendar/components/days-of-month';
+import ArrowButton from '@/shared/components/calendar/components/fragments/arrow-button';
+import DaysOfMonth from '@/shared/components/calendar/components/fragments/days-of-month';
 import {
   defaultCellStyle,
   selectedCircle,
 } from '@/shared/components/calendar/libs/constants/calendarStyles';
-import { monthName } from '@/shared/components/calendar/libs/constants/monthName';
+import { MONTH_NAME } from '@/shared/components/calendar/libs/constants/constants';
+import { useCalendarStore } from '@/shared/components/calendar/libs/stores/useCalendarStore';
 import { formatDateToYMD } from '@/shared/components/calendar/libs/utils/formatDateToYMD';
 import { getMonthRange } from '@/shared/components/calendar/libs/utils/getMonthRange';
 import { cn } from '@/shared/libs/cn';
-import { useCalendarStore } from '@/shared/libs/stores/useCalendarStore';
 
 /**
  * @author 지윤
@@ -35,11 +35,6 @@ import { useCalendarStore } from '@/shared/libs/stores/useCalendarStore';
  *   cellStyle="relative h-[10rem] text-[1.4rem]..."
  *   isForReservation={true}
  * />
- *
- * @note
- * - ✅ `calendarWidth`, `dayOfWeekStyle`, `cellStyle` 프롭을 통해 스타일을 외부에서 커스터마이징할 수 있습니다.
- * - ❗️반응형 클래스(`md:`, `lg:` 등)를 프롭으로 넘길 경우, 클래스 순서나 병합 문제로 스타일이 무시될 수 있습니다.
- *   이 경우에는 임시 `div`에 클래스를 붙여보고, 적용 순서를 정리한 후 복붙하는 방식이 안정적입니다.
  */
 
 const CalendarForForm = ({
@@ -47,14 +42,12 @@ const CalendarForForm = ({
   calendarWidth,
   dayOfWeekStyle,
   cellStyle,
-  isForReservation = false,
   changeFormValue,
 }: {
   scheduleArray?: AvailableScheduleList;
   calendarWidth?: string;
   dayOfWeekStyle?: string;
   cellStyle?: string;
-  isForReservation?: boolean;
   changeFormValue?: () => void;
 }) => {
   const { setDate, setSelectedDate, year, month, selectedDate } =
@@ -62,7 +55,7 @@ const CalendarForForm = ({
   const { thisMonthDays } = getMonthRange(year, month);
 
   const handleClick = (day: number) => {
-    setDate(day); //내부 작동: 클릭한 '일' 업데이트(*이미 클릭한 날짜를 클릭하면 null로 리셋)
+    setDate(day); //내부 작동: '일' 업데이트(*이미 클릭한 날짜를 클릭하면 null로 리셋)
     setSelectedDate(year, month, day);
 
     // 스케줄 표시하는 캘린더로 사용중인 경우
@@ -75,7 +68,7 @@ const CalendarForForm = ({
     <div
       className={cn(
         'flex h-fit w-[32.69rem] flex-wrap bg-white',
-        isForReservation && calendarWidth,
+        calendarWidth,
       )}
     >
       {/* year, month */}
@@ -85,7 +78,7 @@ const CalendarForForm = ({
         )}
       >
         <div className={cn('mb-[0.8rem] flex gap-[0.2rem]')}>
-          <div>{monthName[month]}</div>
+          <div>{MONTH_NAME[month]}</div>
           <div>{year}</div>
         </div>
         <div className="flex gap-[1.2rem]">

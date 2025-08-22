@@ -1,3 +1,5 @@
+import { TriangleAlert } from 'lucide-react';
+
 interface ErrorMessageProps {
   message?: string;
   className?: string;
@@ -8,8 +10,12 @@ export const ErrorMessage = ({
   className = '',
 }: ErrorMessageProps) => {
   return (
-    <div className={`flex-center h-[16rem] text-red-500 ${className}`}>
-      <span className="text-[1.6rem] font-semibold md:text-[1.8rem] lg:text-[2rem]">
+    <div className={`flex-center h-[16rem] flex-col gap-[1.6rem] ${className}`}>
+      <TriangleAlert
+        strokeWidth={1.25}
+        className="size-[10rem] text-gray-800"
+      />
+      <span className="text-[1.6rem] font-semibold text-gray-950 md:text-[1.8rem] lg:text-[2rem]">
         {message}
       </span>
     </div>

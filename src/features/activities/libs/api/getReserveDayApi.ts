@@ -19,5 +19,5 @@ export const getReservations = async ({
   if (!response.ok) throw new Error('예약 정보 요청 실패');
 
   const data = await response.json();
-  return data; // 이건 서버 응답 구조에 따라 조정해야 함
+  return data;
 };

@@ -278,7 +278,7 @@ const DateScheduler = ({
                   <button
                     type="button"
                     onClick={() => removeSchedule(index)}
-                    className="flex-center mb-[1.2rem] h-[2.8rem] w-[2.8rem] rounded-full bg-gray-50 text-gray-950 hover:bg-gray-200 md:mb-[0.5rem] md:h-[4.2rem] md:w-[4.2rem]"
+                    className="flex-center btn-action-gray mb-[1.2rem] h-[2.8rem] w-[2.8rem] rounded-full bg-gray-50 text-gray-950 md:mb-[0.5rem] md:h-[4.2rem] md:w-[4.2rem]"
                   >
                     <span className="text-[1.8rem] font-medium">-</span>
                   </button>
@@ -288,7 +288,7 @@ const DateScheduler = ({
                   <button
                     type="button"
                     onClick={addSchedule}
-                    className="bg-main flex-center mb-[1.2rem] h-[2.8rem] w-[2.8rem] rounded-full text-white hover:bg-blue-500 md:mb-[0.5rem] md:h-[4.2rem] md:w-[4.2rem]"
+                    className="bg-main flex-center btn-action-blue mb-[1.2rem] h-[2.8rem] w-[2.8rem] rounded-full text-white md:mb-[0.5rem] md:h-[4.2rem] md:w-[4.2rem]"
                   >
                     <span className="text-[1.8rem] font-medium">+</span>
                   </button>

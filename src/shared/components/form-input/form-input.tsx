@@ -10,7 +10,7 @@ import {
 } from 'react-hook-form';
 
 import Modal from '@/shared/components/modal/components';
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
+import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 
 /**
  * 공통 입력 컴포넌트
@@ -64,7 +64,14 @@ export const FormInput = <T extends FieldValues>({
   const [showPassword, setShowPassword] = useState(false);
   const isPasswordField = type === 'password';
 
-  const { openModal, closeModal } = useModalStore();
+  const { openModal, closeModal, modalName } = useModalStore();
+
+  // 주소 검색 모달 열기 함수
+  const handleAddressSearch = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openModal('address-search');
+  };
 
   // 공통 스타일 클래스
   const baseInputClass = `w-full bg-white rounded-[1.2rem] border px-[1.6rem] text-[1.4rem] focus:outline-0 md:text-[1.6rem] ${
@@ -153,16 +160,12 @@ export const FormInput = <T extends FieldValues>({
               type="button"
               id={name}
               className={`${baseInputClass} flex h-[4.4rem] cursor-pointer items-center justify-between md:h-[4.8rem]`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openModal();
-              }}
+              onClick={handleAddressSearch}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
                   e.stopPropagation();
-                  openModal();
+                  handleAddressSearch(e);
                 }
               }}
               aria-label={placeholder}
@@ -172,20 +175,22 @@ export const FormInput = <T extends FieldValues>({
               </span>
               <Search className="h-[2rem] w-[2rem] text-gray-500 md:h-[2.4rem] md:w-[2.4rem]" />
             </button>
-            <Modal type="custom" extraClassName="md: w-[60rem] h-[50rem]">
-              <div>
-                <DaumPostcode
-                  onComplete={(data) => {
-                    // 주소 선택 완료 시 입력 필드에 값 설정
-                    const fullAddress = data.address;
-                    if (setValue) {
-                      setValue(name, fullAddress);
-                    }
-                    closeModal();
-                  }}
-                />
-              </div>
-            </Modal>
+            {modalName === 'address-search' && (
+              <Modal type="custom" extraClassName="md: w-[60rem] h-[50rem]">
+                <div>
+                  <DaumPostcode
+                    onComplete={(data) => {
+                      // 주소 선택 완료 시 입력 필드에 값 설정
+                      const fullAddress = data.address;
+                      if (setValue) {
+                        setValue(name, fullAddress);
+                      }
+                      closeModal();
+                    }}
+                  />
+                </div>
+              </Modal>
+            )}
           </div>
         );
 

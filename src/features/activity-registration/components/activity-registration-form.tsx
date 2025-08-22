@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import z from 'zod';
 
 import BannerImageUpload from '@/features/activity-registration/components/banner-image-upload';
@@ -16,6 +15,8 @@ import {
 } from '@/features/activity-registration/libs/constants/formOption';
 import { useRegistrationMutation } from '@/features/activity-registration/libs/hooks/useRegistrationMutation';
 import { FormInput } from '@/shared/components/form-input/form-input';
+import Modal from '@/shared/components/modal/components';
+import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 import { ActivityRegistrationParams } from '@/shared/types/activity';
 
 // 기존 hasDuplicateStartTime 함수를 사용
@@ -77,8 +78,10 @@ const ActivityRegistrationForm = () => {
 
   const registrationMutation = useRegistrationMutation();
   const router = useRouter();
+  const { openModal, closeModal, modalName } = useModalStore();
 
-  const onSubmit = async (data: FormData) => {
+  // 실제 등록 로직을 별도 함수로 분리
+  const handleRegistration = async (data: FormData) => {
     // 모든 스케줄의 시간 유효성 검증
     const hasInvalidSchedules = data.schedules.some((schedule) => {
       const startIndex = TIME_OPTIONS.findIndex(
@@ -95,8 +98,6 @@ const ActivityRegistrationForm = () => {
       return;
     }
 
-    // 중복 시간 체크는 DateScheduler에서 처리되므로 제거
-
     // API 데이터 변환
     const apiData: ActivityRegistrationParams = {
       title: data.title,
@@ -112,137 +113,170 @@ const ActivityRegistrationForm = () => {
     // TanStack Query mutation 실행
     try {
       await registrationMutation.mutateAsync(apiData);
-      toast.success('체험이 등록되었습니다!');
-      router.push('/activities');
+      router.push('/my/my-activities');
     } catch (error) {
-      console.error('등록 실패:', error); // 디버깅용
-      toast.error('등록 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.error('등록 실패:', error);
+      alert('등록 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
 
+  const onSubmit = () => {
+    // 모달 열기
+    openModal('registration-confirm');
+  };
+
+  // 모달 확인 버튼 핸들러
+  const handleConfirmRegistration = async () => {
+    closeModal();
+    // 실제 등록 로직 실행
+    await handleRegistration(watch());
+  };
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-[2.4rem] flex flex-col"
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
-          const target = e.target as HTMLInputElement;
-          if (target.type === 'button' || target.readOnly) {
-            e.preventDefault();
-            e.stopPropagation();
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mt-[2.4rem] flex flex-col"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
+            const target = e.target as HTMLInputElement;
+            if (target.type === 'button' || target.readOnly) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
           }
-        }
-      }}
-    >
-      {/* 제목 */}
-      <FormInput
-        label="제목"
-        name="title"
-        register={register}
-        error={errors.title}
-        inputType="input"
-        placeholder="제목을 입력해 주세요"
-        required
-      />
-
-      {/* 카테고리 */}
-      <FormInput
-        label="카테고리"
-        name="category"
-        register={register}
-        error={errors.category}
-        inputType="select"
-        options={CATEGORY_OPTIONS}
-        placeholder="카테고리를 선택해 주세요"
-        required
-      />
-
-      {/* 설명 */}
-      <FormInput
-        label="설명"
-        name="description"
-        register={register}
-        error={errors.description}
-        inputType="textarea"
-        rows={6}
-        placeholder="체험에 대한 설명을 입력해 주세요"
-        required
-      />
-
-      {/* 가격 */}
-      <FormInput
-        label="가격"
-        name="price"
-        register={register}
-        error={errors.price}
-        inputType="number"
-        placeholder="체험 금액을 입력해 주세요"
-        required
-      />
-
-      {/* 주소 */}
-      <FormInput
-        label="주소"
-        name="address"
-        register={register}
-        setValue={setValue}
-        watch={watch}
-        error={errors.address}
-        inputType="address"
-        placeholder="주소를 입력해 주세요"
-        required
-      />
-
-      {/* DateScheduler 컴포넌트 사용 */}
-      <DateScheduler
-        schedules={watch('schedules') || []}
-        onChange={async (schedules) => {
-          setValue('schedules', schedules);
-          await trigger('schedules');
         }}
-        errors={{ schedules: errors.schedules }}
-        register={register}
-        formErrors={errors}
-      />
+      >
+        {/* 제목 */}
+        <FormInput
+          label="제목"
+          name="title"
+          register={register}
+          error={errors.title}
+          inputType="input"
+          placeholder="제목을 입력해 주세요"
+          required
+        />
 
-      <BannerImageUpload
-        label="배너 이미지 등록"
-        name="bannerImages"
-        error={errors.bannerImages}
-        required
-        onChange={async (imageUrl: string) => {
-          setValue('bannerImages', imageUrl);
-          await trigger('bannerImages');
-        }}
-        value={watch('bannerImages') || ''}
-      />
+        {/* 카테고리 */}
+        <FormInput
+          label="카테고리"
+          name="category"
+          register={register}
+          error={errors.category}
+          inputType="select"
+          options={CATEGORY_OPTIONS}
+          placeholder="카테고리를 선택해 주세요"
+          required
+        />
 
-      <SubImage
-        label="소개 이미지 등록"
-        name="subImages"
-        error={errors.subImages}
-        onChange={async (imageUrls: string[]) => {
-          setValue('subImages', imageUrls);
-          await trigger('subImages');
-        }}
-        value={watch('subImages') || []}
-      />
+        {/* 설명 */}
+        <FormInput
+          label="설명"
+          name="description"
+          register={register}
+          error={errors.description}
+          inputType="textarea"
+          rows={6}
+          placeholder="체험에 대한 설명을 입력해 주세요"
+          required
+        />
 
-      {/* 제출 버튼 */}
-      <div className="flex-center">
-        <button
-          type="submit"
-          disabled={registrationMutation.isPending}
-          className={`h-[4.1rem] w-[16rem] cursor-pointer rounded-[1.2rem] text-center text-[1.4rem] font-bold text-white md:h-[4.8rem] md:w-[16rem] md:rounded-[1.6rem] md:text-[1.6rem] lg:h-[5.2rem] lg:w-[18rem] ${
-            registrationMutation.isPending
-              ? 'cursor-not-allowed bg-gray-400'
-              : 'bg-main hover:bg-blue-500'
-          }`}
-        >
-          {registrationMutation.isPending ? '등록 중...' : '체험 등록하기'}
-        </button>
-      </div>
-    </form>
+        {/* 가격 */}
+        <FormInput
+          label="가격"
+          name="price"
+          register={register}
+          error={errors.price}
+          inputType="number"
+          placeholder="체험 금액을 입력해 주세요"
+          required
+        />
+
+        {/* 주소 */}
+        <FormInput
+          label="주소"
+          name="address"
+          register={register}
+          setValue={setValue}
+          watch={watch}
+          error={errors.address}
+          inputType="address"
+          placeholder="주소를 입력해 주세요"
+          required
+        />
+
+        {/* DateScheduler 컴포넌트 사용 */}
+        <DateScheduler
+          schedules={watch('schedules') || []}
+          onChange={async (schedules) => {
+            setValue('schedules', schedules);
+            await trigger('schedules');
+          }}
+          errors={{ schedules: errors.schedules }}
+          register={register}
+          formErrors={errors}
+        />
+
+        <BannerImageUpload
+          label="배너 이미지 등록"
+          name="bannerImages"
+          error={errors.bannerImages}
+          required
+          onChange={async (imageUrl: string) => {
+            setValue('bannerImages', imageUrl);
+            await trigger('bannerImages');
+          }}
+          value={watch('bannerImages') || ''}
+        />
+
+        <SubImage
+          label="소개 이미지 등록"
+          name="subImages"
+          error={errors.subImages}
+          onChange={async (imageUrls: string[]) => {
+            setValue('subImages', imageUrls);
+            await trigger('subImages');
+          }}
+          value={watch('subImages') || []}
+        />
+
+        {/* 제출 버튼 */}
+        <div className="flex-center">
+          <button
+            type="submit"
+            disabled={registrationMutation.isPending}
+            className={`h-[4.1rem] w-[16rem] cursor-pointer rounded-[1.2rem] text-center text-[1.4rem] font-bold text-white md:h-[4.8rem] md:w-[16rem] md:rounded-[1.6rem] md:text-[1.6rem] lg:h-[5.2rem] lg:w-[18rem] ${
+              registrationMutation.isPending
+                ? 'cursor-not-allowed bg-gray-400'
+                : 'bg-main btn-action-blue'
+            }`}
+          >
+            {registrationMutation.isPending ? '등록 중...' : '체험 등록하기'}
+          </button>
+        </div>
+      </form>
+
+      {/* 체험 등록 확인 모달 */}
+      {modalName === 'registration-confirm' && (
+        <Modal type="warning">
+          <Modal.Header>체험을 등록하시겠습니까?</Modal.Header>
+          <div className="flex gap-[1.2rem]">
+            <Modal.Button color="white" ariaLabel="취소" onClick={closeModal}>
+              취소
+            </Modal.Button>
+            <Modal.Button
+              color="blue"
+              ariaLabel="확인"
+              onClick={handleConfirmRegistration}
+              controlDisabled={() => registrationMutation.isPending}
+            >
+              확인
+            </Modal.Button>
+          </div>
+        </Modal>
+      )}
+    </>
   );
 };
 

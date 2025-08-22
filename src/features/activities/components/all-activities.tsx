@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { ActivityCard } from '@/features/activities/components/activity-card';
 import useResActivitiesQuery from '@/features/activities/libs/hooks/useResActivitiesQuery';
-import Dropdown from '@/shared/components/dropdown';
+import Dropdown from '@/shared/components/dropdown/dropdown';
 import { ErrorMessage } from '@/shared/components/error-message/error-message';
 import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
 import Pagination from '@/shared/components/pagination/pagination';
@@ -104,21 +104,25 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
         </Dropdown>
       </div>
 
-      <div className="category-scroll -mx-[2.4rem] mb-[2.4rem] flex flex-nowrap gap-[0.8rem] overflow-x-auto px-[2.4rem] whitespace-nowrap md:mb-[3rem] md:gap-[2rem]">
-        {CATEGORIES.map(({ name, icon: Icon }) => (
-          <Button
-            key={name}
-            variant={active === name ? 'selected' : 'default'}
-            size="sm"
-            className="group cursor-pointer"
-            onClick={() => handleCategoryChange(name)}
-          >
-            <Icon
-              className={`size-[1.7rem] ${active === name ? 'text-white' : 'text-gray-950'}`}
-            />{' '}
-            {name}
-          </Button>
-        ))}
+      {/* 카테고리 스크롤 영역 */}
+      <div className="relative mb-[2.4rem] md:mb-[3rem]">
+        {/* 스크롤 컨테이너 */}
+        <div className="category-scroll flex flex-nowrap gap-[0.8rem] overflow-x-auto px-[1rem] py-[0.5rem] whitespace-nowrap md:mb-[3rem] md:gap-[2rem]">
+          {CATEGORIES.map(({ name, icon: Icon }) => (
+            <Button
+              key={name}
+              variant={active === name ? 'selected' : 'default'}
+              size="sm"
+              className="group cursor-pointer"
+              onClick={() => handleCategoryChange(name)}
+            >
+              <Icon
+                className={`size-[1.7rem] ${active === name ? 'text-white' : 'text-gray-950'}`}
+              />
+              {name}
+            </Button>
+          ))}
+        </div>
       </div>
 
       <div>

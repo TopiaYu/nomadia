@@ -1,28 +1,19 @@
 'use client';
-import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
-import { deleteActivities } from '@/features/my/my-activities/lib/api/myActivities.api';
+import { useActivityIdStore } from '@/features/my/my-activities/lib/stores/useActivityIdStore';
 import Modal from '@/shared/components/modal/components';
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
+import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
+import { useDeleteActivityMutation } from '@/shared/libs/hooks/useDeleteActivityMutation';
 
 export const DeleteConfirmModal = () => {
-  const { activeReservationId, closeModal } = useModalStore();
-  const queryClient = useQueryClient();
+  const { closeModal } = useModalStore();
+  const { mutate } = useDeleteActivityMutation();
+  const { activityId, setActivityId } = useActivityIdStore();
 
-  const handleConfirm = async () => {
-    if (!activeReservationId) return;
-
-    try {
-      await deleteActivities(activeReservationId);
-      toast.success('삭제가 완료되었습니다.');
-
-      await queryClient.invalidateQueries({ queryKey: ['myActivities'] });
-    } catch {
-      toast.error('삭제에 실패하였습니다.');
-    } finally {
-      closeModal();
-    }
+  const handleConfirm = () => {
+    mutate(activityId);
+    setActivityId(0); //reset
+    closeModal();
   };
 
   return (

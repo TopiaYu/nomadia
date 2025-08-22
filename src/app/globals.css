@@ -5,7 +5,10 @@
 @theme {
   /* Primary Colors */
   --color-main: oklch(0.649 0.192 253.09); /* #188FFF */
+  --color-main-600: oklch(0.5724 0.1948 255.97); /* #0174E7 */
+  --color-main-700: oklch(0.5101 0.166603 254.7639); /* #0064c2 */
   --color-sub: oklch(0.9681 0.0183 232.5); /* #e9f7ff */
+  --color-sub-50: oklch(0.9805 0.0108 234.81); /* #F2FAFF */
   --color-sub-300: oklch(0.8816 0.0619 245.59); /* #b7ddff */
 
   /* Base Colors */
@@ -28,6 +31,7 @@
 
   /* Warning Colors */
   --color-red-500: oklch(0.641 0.245 27.7); /* #FF2727 */
+  --color-red-400: oklch(0.664 0.2106 12.53); /* #F8496F */
   --color-red-100: oklch(0.97 0.01557 2.6636); /* #fff1f4 */
 
   /* Yellow Colors */
@@ -215,7 +219,12 @@
 
   /* 체험 카드 그림자 유틸리티 클래스 - Card Shadow Utility Class */
   .shadow-experience-card {
-    box-shadow: 0 2.25px 13.5px 0 rgba(156, 180, 202, 0.2);
+    box-shadow: 0 2px 12px 0 rgba(156, 180, 202, 0.2);
+  }
+
+  /* 카테고리 버튼용 그림자 */
+  .shadow-category-button {
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.1);
   }
 
   .best-activities .swiper-slide {
@@ -318,4 +327,24 @@
     font-weight: 700;
     line-height: 1.6;
   }
+}
+/* 버튼 액션 스타일(hover,active 시) */
+.trans-colors-200,
+.btn-action-blue,
+.btn-action-white,
+.btn-action-red,
+.btn-action-gray {
+  @apply transition-colors duration-200 active:duration-100;
+}
+.btn-action-blue {
+  @apply hover:bg-main-600 hover:text-sub active:bg-main-700;
+}
+.btn-action-white {
+  @apply hover:bg-sub-50 hover:text-main active:text-main-600 active:bg-sub;
+}
+.btn-action-red {
+  @apply hover:bg-red-100 hover:text-red-400 active:border-red-400 active:text-red-400;
+}
+.btn-action-gray {
+  @apply hover:bg-gray-300 hover:text-white active:border-gray-300;
 }

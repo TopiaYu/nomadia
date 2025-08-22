@@ -8,7 +8,7 @@ import { activityIdStyle } from '@/features/activityId/libs/constants/variants';
 import { useReviewsQuery } from '@/features/activityId/libs/hooks/useReviewsQuery';
 import { formatRating } from '@/features/activityId/libs/utils/formatRating';
 import Pagination from '@/shared/components/pagination/pagination';
-import StarImage from '@/shared/components/star';
+import StarImage from '@/shared/components/star/star';
 import { cn } from '@/shared/libs/cn';
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
 
@@ -34,7 +34,7 @@ const Reviews = ({ activityId }: { activityId: number }) => {
         </header>
         <h3 className="flex-center mb-[3rem] flex-col gap-[0.6rem]">
           <span className="block text-[2.4rem] font-semibold text-gray-950">
-            {data?.averageRating}
+            {data?.averageRating.toFixed(1)}
           </span>
           <span className="block text-[1.4rem] font-bold text-gray-950">
             {formatRating(data?.averageRating, data?.totalCount)}

@@ -18,7 +18,7 @@ interface FilterButtonProps {
  */
 const FilterButtons = ({ active, onChange }: FilterButtonProps) => {
   return (
-    <div className="category-scroll mt-[1.4rem] mb-[2.4rem] flex flex-nowrap gap-[0.5rem] overflow-x-auto whitespace-nowrap">
+    <div className="category-scroll mt-[1.4rem] mb-[2.4rem] flex flex-nowrap gap-[1rem] overflow-x-auto px-[1rem] py-[0.5rem] whitespace-nowrap">
       {BOOKING_STATUS.map(({ label, value }) => (
         <Button
           key={label}

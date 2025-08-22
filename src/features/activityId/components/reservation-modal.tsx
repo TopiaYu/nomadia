@@ -1,4 +1,4 @@
-import ReservationForm from '@/features/activityId/components/reservation-form';
+import ReservationForm from '@/features/activityId/components/reservation-form/reservation-form';
 import AdaptiveModal from '@/shared/components/modal/components/adaptive-modal/adaptive-modal';
 
 const ReservationModal = ({

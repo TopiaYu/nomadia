@@ -1,17 +1,20 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
+import { useActivityIdStore } from '@/features/my/my-activities/lib/stores/useActivityIdStore';
+import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
 
 import { MyActivitiesCardProps } from '../lib/types/types';
 const MyActivitiesCard = ({ activity }: MyActivitiesCardProps) => {
   const { openModal } = useModalStore();
+  const { setActivityId } = useActivityIdStore();
   const router = useRouter();
 
   const handleDelete = () => {
     console.log(typeof activity.id);
-    openModal(activity.id);
+    setActivityId(activity.id);
+    openModal();
   };
 
   const hadnleEdit = () => {

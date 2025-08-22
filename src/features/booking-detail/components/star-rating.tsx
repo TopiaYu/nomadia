@@ -22,7 +22,7 @@ const StarRating = ({ onRatingChange }: StarRatingProps) => {
 
   return (
     <div className="flex gap-4">
-      {[...Array(5)].map((_, i) => {
+      {Array.from({ length: 5 }, (_, i) => {
         const starIndex = i + 1;
         const isActive = starIndex <= (hovered || rating);
 
@@ -32,7 +32,7 @@ const StarRating = ({ onRatingChange }: StarRatingProps) => {
             width="42"
             height="42"
             viewBox="0 0 24 24"
-            className="cursor-pointer"
+            className="cursor-pointer focus:ring-0 focus:outline-none"
             role="button"
             tabIndex={0}
             aria-label={`${starIndex} 점`}

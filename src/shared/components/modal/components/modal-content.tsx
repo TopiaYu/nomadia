@@ -1,60 +1,58 @@
+'use client';
 import Image from 'next/image';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 
 import { modalContentClasses } from '@/shared/components/modal/libs/modalClasses';
+import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 import { cn } from '@/shared/libs/cn';
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
 
 const ModalContent = ({
+  type,
   children,
-  isCenter,
   extraClassName,
 }: {
+  type: 'confirm' | 'warning' | 'custom';
   children: ReactNode;
-  isCenter?: boolean;
   extraClassName?: string;
 }) => {
-  const { isModalOpen, closeModal, modalType } = useModalStore();
+  const { isModalOpen, closeModal } = useModalStore();
 
-  if (!isModalOpen) return null;
+  // 모달에 먼저 포커스 -> esc동작 가능
+  const modalRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (isModalOpen && modalRef.current) modalRef.current.focus();
+  }, [isModalOpen]);
 
   return (
     <>
-      {/* 모달을 중앙정렬 하기 위한 div 태그*/}
-
       <div
+        ref={modalRef}
         className={cn(
-          isCenter && 'flex-center pointer-events-none fixed inset-0 z-99',
+          'pointer-events-auto rounded-[3rem] bg-white',
+          modalContentClasses[type],
+          extraClassName,
         )}
+        onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫힘 방지
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            closeModal();
+          }
+        }}
+        role="dialog"
+        tabIndex={0}
       >
-        {/* 모달 */}
-        <div
-          className={cn(
-            'pointer-events-auto rounded-[3rem] bg-white',
-            modalContentClasses[modalType],
-            extraClassName,
-            'z-100',
-          )}
-          onClick={(e) => e.stopPropagation()} // 모달 내용 클릭 시 닫힘 방지
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              closeModal();
-            }
-          }}
-          role="dialog"
-          tabIndex={-1}
-        >
-          {modalType === 'warning' && (
-            <Image
-              src="/images/warning.svg"
-              alt="warning image"
-              width={49}
-              height={49}
-              className="md:size-[8.8rem]"
-            />
-          )}
-          {children}
-        </div>
+        {/* 경고 이미지 */}
+        {type === 'warning' && (
+          <Image
+            src="/images/warning.svg"
+            alt="warning image"
+            width={49}
+            height={49}
+            className="md:size-[8.8rem]"
+            priority
+          />
+        )}
+        {children}
       </div>
     </>
   );

@@ -12,7 +12,7 @@ import SubImages from '@/features/activityId/components/sub-images';
 import { activityIdStyle } from '@/features/activityId/libs/constants/variants';
 import { useActivityIdQuery } from '@/features/activityId/libs/hooks/useActivityIdQuery';
 import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
-import StarImage from '@/shared/components/star';
+import StarImage from '@/shared/components/star/star';
 
 const ActivityPage = () => {
   const { id } = useParams();
@@ -53,7 +53,7 @@ const ActivityPage = () => {
               <div className="mb-[1rem] flex items-center gap-[0.6rem] text-[1.4rem] leading-none text-gray-700">
                 <StarImage />
                 <p>
-                  {data?.rating}({data?.reviewCount})
+                  {data?.rating.toFixed(1)} ({data?.reviewCount})
                 </p>
               </div>
               <div className="flex items-center gap-[0.2rem] text-[1.4rem] leading-none text-gray-700">

@@ -1,13 +1,13 @@
 'use client';
 
-import ArrowButton from '@/shared/components/calendar/components/arrow-button';
-import DaysOfMonth from '@/shared/components/calendar/components/days-of-month';
+import ArrowButton from '@/shared/components/calendar/components/fragments/arrow-button';
+import DaysOfMonth from '@/shared/components/calendar/components/fragments/days-of-month';
 import { cellStyleForCWR } from '@/shared/components/calendar/libs/constants/calendarStyles';
+import { useCalendarStore } from '@/shared/components/calendar/libs/stores/useCalendarStore';
 import { MonthReservations } from '@/shared/components/calendar/libs/types/data';
 import { formatDateToYMD } from '@/shared/components/calendar/libs/utils/formatDateToYMD';
 import { getMonthRange } from '@/shared/components/calendar/libs/utils/getMonthRange';
 import { cn } from '@/shared/libs/cn';
-import { useCalendarStore } from '@/shared/libs/stores/useCalendarStore';
 
 /**
  * @author 지윤
@@ -29,11 +29,6 @@ import { useCalendarStore } from '@/shared/libs/stores/useCalendarStore';
  *   cellStyle="relative h-[10rem] text-[1.4rem]..."
  *   onCellClick={()=>{appearModal}}
  * />
- *
- * @note
- * - ✅ `calendarWidth`, `dayOfWeekStyle`, `cellStyle` 프롭을 통해 스타일을 외부에서 커스터마이징할 수 있습니다.
- * - ❗️반응형 클래스(`md:`, `lg:` 등)를 프롭으로 넘길 경우, 클래스 순서나 병합 문제로 스타일이 무시될 수 있습니다.
- *   이 경우에는 임시 `div`에 클래스를 붙여보고, 적용 순서를 정리한 후 복붙하는 방식이 안정적입니다.
  */
 
 const CalendarWithReservations = ({
@@ -47,7 +42,7 @@ const CalendarWithReservations = ({
   calendarWidth?: string;
   dayOfWeekStyle?: string;
   cellStyle?: string;
-  onCellClick?: (dateStr: string) => void;
+  onCellClick?: (dateStr: string, scheduleId: number | null) => void;
 }) => {
   const { year, month, date, setDate, setSelectedDate } = useCalendarStore();
   const { thisMonthDays } = getMonthRange(year, month);
@@ -57,7 +52,15 @@ const CalendarWithReservations = ({
     setSelectedDate(year, month, day);
     if (onCellClick) {
       const dateStr = formatDateToYMD(new Date(year, month, day));
-      onCellClick(dateStr);
+
+      const matchingReservation = reservationArray.find((res) => {
+        const rDateStr = res.date.split('T')[0];
+        return rDateStr === dateStr;
+      });
+
+      const scheduleId = matchingReservation?.scheduleId ?? null;
+
+      onCellClick(dateStr, scheduleId);
     }
   };
 

@@ -1,19 +1,21 @@
 'use client';
+
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { getActListApi } from '@/features/activities/libs/api/getActListApi';
+import { getReservations } from '@/features/activities/libs/api/getReserveDayApi';
 import { getReservationsByMonthApi } from '@/features/activities/libs/api/getReserveMonthApi';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
+import { ContentReservation } from '@/features/reservation-state/components/content-reservation';
+import EmptyReservation from '@/features/reservation-state/components/empty-reservation';
 import CalendarWithReservations from '@/shared/components/calendar/components/calendar-with-reservations';
+import { useCalendarStore } from '@/shared/components/calendar/libs/stores/useCalendarStore';
 import { MonthReservations } from '@/shared/components/calendar/libs/types/data';
-import Dropdown from '@/shared/components/dropdown';
+import Dropdown from '@/shared/components/dropdown/dropdown';
 import AdaptiveModal from '@/shared/components/modal/components/adaptive-modal/adaptive-modal';
-import ContentReservation from '@/shared/components/modal/components/adaptive-modal/content-reservation';
-import EmptyReservation from '@/shared/components/modal/components/adaptive-modal/empty-reservation';
-import { useCalendarStore } from '@/shared/libs/stores/useCalendarStore';
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
+import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 import { Activity } from '@/shared/types/activity';
 
 const ReserveCalendarPage = () => {
@@ -30,35 +32,51 @@ const ReserveCalendarPage = () => {
   );
   const [shouldFetch, setShouldFetch] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const { setModalType, appearModal, disappearModal, isDesktop } =
-    useModalStore();
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
+    null,
+  );
+
+  const { appearModal, disappearModal } = useModalStore();
   const { month, setYear, setMonth } = useCalendarStore();
+  const { accessToken } = useAuthStore();
 
   useEffect(() => {
     if (selectedActivityId) {
-      setModalType('custom');
-      if (isDesktop) {
-        appearModal();
-      }
+      appearModal();
     } else {
       disappearModal();
     }
-  }, [
-    selectedActivityId,
-    isDesktop,
-    setModalType,
-    appearModal,
-    disappearModal,
-  ]);
+  }, [selectedActivityId, appearModal, disappearModal]);
 
   const handleDropdownOpen = () => {
     setShouldFetch(true);
   };
 
-  const handleDateClick = (dateStr: string) => {
+  const handleDateClick = async (dateStr: string) => {
     setSelectedDate(dateStr);
-    setModalType('custom');
-    appearModal();
+
+    if (!selectedActivityId || !accessToken) {
+      setSelectedScheduleId(null);
+      return;
+    }
+
+    try {
+      const res = await getReservations({
+        actId: selectedActivityId,
+        date: dateStr,
+        token: accessToken,
+      });
+
+      const scheduleIdFromApi = res?.[0]?.scheduleId ?? null;
+      if (scheduleIdFromApi) {
+        setSelectedScheduleId(scheduleIdFromApi);
+      } else {
+        setSelectedScheduleId(null);
+      }
+    } catch (err) {
+      console.error('[❌] 예약 스케줄 조회 실패:', err);
+      setSelectedScheduleId(null);
+    }
   };
 
   useEffect(() => {
@@ -68,7 +86,7 @@ const ReserveCalendarPage = () => {
       try {
         const data = await getActListApi();
         const myActivities = (data.activities || []).filter(
-          (activity) => activity.userId === Number(userId),
+          (act) => act.userId === Number(userId),
         );
         setActivities(myActivities);
       } catch (error) {
@@ -83,6 +101,7 @@ const ReserveCalendarPage = () => {
     const activityId = String(id);
     setSelectedActivityId(activityId);
     setSelectedDate(null);
+    setSelectedScheduleId(null);
 
     try {
       const currentYear = new Date().getFullYear();
@@ -104,9 +123,7 @@ const ReserveCalendarPage = () => {
 
         for (const r of reservations) {
           const resDate = new Date(r.date);
-          if (!earliestDate || resDate < earliestDate) {
-            earliestDate = resDate;
-          }
+          if (!earliestDate || resDate < earliestDate) earliestDate = resDate;
         }
 
         if (earliestDate) break;
@@ -124,9 +141,23 @@ const ReserveCalendarPage = () => {
     }
   };
 
-  const selectedReservationsOfDate = useMemo(() => {
+  const updateReservationStatus = (
+    reservationId: string,
+    newStatus: 'confirmed' | 'declined',
+  ) => {
+    setReservationArray((prev) =>
+      prev.map((res) =>
+        res.id === reservationId ? { ...res, status: newStatus } : res,
+      ),
+    );
+  };
+
+  const selectedReservationsOfDate = React.useMemo(() => {
     if (!selectedDate) return [];
-    return reservationArray.filter((res) => res.date === selectedDate);
+    return reservationArray.filter((res) => {
+      const rDateStr = res.date.split('T')[0];
+      return rDateStr === selectedDate;
+    });
   }, [selectedDate, reservationArray]);
 
   return (
@@ -145,9 +176,7 @@ const ReserveCalendarPage = () => {
                 tabIndex={0}
                 onClick={handleDropdownOpen}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleDropdownOpen();
-                  }
+                  if (e.key === 'Enter' || e.key === ' ') handleDropdownOpen();
                 }}
                 className="shadow-experience-card flex h-[5.4rem] w-full cursor-pointer items-center justify-end rounded-[1rem] border border-gray-100 bg-white pr-[2.6rem] text-[1.4rem] text-gray-950 md:text-[1.6rem]"
               >
@@ -206,24 +235,20 @@ const ReserveCalendarPage = () => {
 
         {selectedActivityId && (
           <AdaptiveModal extraClassName="w-[37.5rem] h-[50.8rem] md:w-[74.4rem] md:h-[39.7rem] lg:w-[34rem] lg:h-[51.9rem] border border-gray-50 shadow-experience-card">
-            {selectedDate ? (
-              <div className="p-4">
-                {selectedReservationsOfDate &&
-                selectedReservationsOfDate.length > 0 ? (
-                  <ContentReservation
-                  // scheduleId={selectedActivityId}
-                  // dateString={selectedDate}
-                  // reservations={selectedReservationsOfDate}
-                  />
-                ) : (
-                  <EmptyReservation />
-                )}
-              </div>
-            ) : (
-              <div className="txt-12-medium p-4 text-center text-gray-950">
-                날짜를 선택하면 예약 목록이 표시됩니다.
-              </div>
-            )}
+            <div className="p-4">
+              {selectedReservationsOfDate.length > 0 ? (
+                <ContentReservation
+                  teamId="15-6"
+                  activityId={Number(selectedActivityId)}
+                  scheduleId={selectedScheduleId ? [selectedScheduleId] : []}
+                  status={'pending'}
+                  selectedDate={selectedDate || ''}
+                  onStatusChange={updateReservationStatus}
+                />
+              ) : (
+                <EmptyReservation />
+              )}
+            </div>
           </AdaptiveModal>
         )}
       </div>

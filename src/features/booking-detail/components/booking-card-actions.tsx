@@ -26,7 +26,7 @@ const BookingCardActions = ({
     return (
       <button
         type="button"
-        className="flex-center w-full cursor-pointer gap-[0.4rem] rounded-[0.8rem] bg-gray-50 p-[1rem] text-[1.4rem] font-medium text-gray-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex-center btn-action-red w-full cursor-pointer gap-[0.4rem] rounded-[0.8rem] bg-gray-50 p-[1rem] text-[1.4rem] font-medium text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
         onClick={onCancelClick || (() => {})}
       >
         예약 취소
@@ -40,7 +40,7 @@ const BookingCardActions = ({
       return (
         <button
           type="button"
-          className="flex-center bg-main w-full cursor-pointer gap-[0.4rem] rounded-[0.8rem] p-[1rem] text-[1.4rem] font-medium text-white hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-center bg-main btn-action-blue w-full cursor-pointer gap-[0.4rem] rounded-[0.8rem] p-[1rem] text-[1.4rem] font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
           onClick={onReviewClick || (() => {})}
         >
           후기 작성

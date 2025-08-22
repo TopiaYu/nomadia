@@ -18,6 +18,7 @@ export const modalButtonClasses: Record<string, string> = {
   custom: 'w-full md:mb-[2rem] h-[4.1rem] md:h-[5.4rem] ',
 };
 export const modalButtonColorClasses: Record<string, string> = {
-  white: 'border border-gray-200 bg-white font-medium text-gray-600',
-  blue: 'bg-main font-semibold text-white',
+  white:
+    'btn-action-white hover:border-main border border-gray-200 bg-white font-medium text-gray-600',
+  blue: 'btn-action-blue bg-main font-semibold text-white',
 };

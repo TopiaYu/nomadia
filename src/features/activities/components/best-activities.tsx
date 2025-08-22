@@ -79,23 +79,30 @@ const BestActivities = () => {
         ) : (
           <Swiper
             modules={[Navigation, Autoplay]}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            spaceBetween={18} // gap-[1.8rem] = 18px
-            slidesPerView={2} // 모바일에서 2개씩 표시
-            slidesPerGroup={2} // 2개씩 그룹으로 슬라이드
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+              waitForTransition: true, // 전환 완료 후 다음 슬라이드
+            }}
+            spaceBetween={18}
+            slidesPerView={2}
+            slidesPerGroup={2}
             loop={true}
             speed={500}
+            // 성능 최적화 옵션 추가
+            watchSlidesProgress={false}
+            watchOverflow={false}
             onBeforeInit={(swiper) => {
               swiperRef.current = swiper;
             }}
             breakpoints={{
               768: {
-                slidesPerView: 2, // 태블릿 2개
+                slidesPerView: 2,
                 slidesPerGroup: 2,
                 spaceBetween: 24,
               },
               1024: {
-                slidesPerView: 4, // 데스크톱 4개
+                slidesPerView: 4,
                 slidesPerGroup: 2,
                 spaceBetween: 30,
               },

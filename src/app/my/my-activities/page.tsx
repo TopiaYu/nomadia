@@ -4,10 +4,8 @@ import Link from 'next/link';
 
 import { DeleteConfirmModal } from '@/features/my/my-activities/components/delete-confirm-modal';
 import { MyActivitiesList } from '@/features/my/my-activities/components/my-activities-list';
-import { useModalStore } from '@/shared/libs/stores/useModalStore';
 
 const MyActivityPage = () => {
-  const { isModalOpen } = useModalStore();
   return (
     <>
       {/* 페이지 헤더 */}
@@ -37,7 +35,7 @@ const MyActivityPage = () => {
       {/* 내 체험 리스트 */}
       <MyActivitiesList />
       {/* 삭제 확인 모달 */}
-      {isModalOpen && <DeleteConfirmModal />}
+      <DeleteConfirmModal />
     </>
   );
 };
