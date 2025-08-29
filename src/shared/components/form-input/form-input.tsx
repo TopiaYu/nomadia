@@ -176,7 +176,7 @@ export const FormInput = <T extends FieldValues>({
               <Search className="h-[2rem] w-[2rem] text-gray-500 md:h-[2.4rem] md:w-[2.4rem]" />
             </button>
             {modalName === 'address-search' && (
-              <Modal type="custom" extraClassName="md: w-[60rem] h-[50rem]">
+              <Modal type="custom" extraClassName="md:w-[60rem] h-[50rem]">
                 <div>
                   <DaumPostcode
                     onComplete={(data) => {

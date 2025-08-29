@@ -1,4 +1,4 @@
-import { Activity, ActivityBase } from '@/shared/types/activity';
+import { Reservation } from '@/shared/types/reservation';
 
 import { BookingStatus } from '../constants/bookingStatus';
 
@@ -9,27 +9,8 @@ export type GetBookingParams = {
   status?: BookingStatus;
 };
 
-// 예약에서 사용할 Activity 타입 (필요한 필드만 추출)
-export type BookingActivity = Pick<Activity, 'id'> &
-  Pick<ActivityBase, 'title' | 'bannerImageUrl'>;
-
-// 예약 상세 조회 API 응답 타입
-export type Reservation = {
-  activity: BookingActivity;
-  scheduleId: number;
-  id: number;
-  teamId: string;
-  userId: number;
-  status: BookingStatus;
-  reviewSubmitted: boolean;
-  totalPrice: number;
-  headCount: number;
-  date: string;
-  startTime: string; // HH:mm
-  endTime: string; // HH:mm
-  createdAt: string;
-  updatedAt: string;
-};
+// 예약 상세 조회 API 응답 타입 - 공통 타입 사용
+export type { Reservation };
 
 // 예약 목록 조회 API 응답 타입
 export type GetBookingResponse = {

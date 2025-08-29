@@ -195,17 +195,23 @@ export const ContentReservation: React.FC<ContentReservationProps> = ({
 
       <div className="mb-6">
         <div className="txt-14-bold mb-1 block">예약 시간</div>
-        <select
-          className="txt-14-medium h-[4.4rem] w-full rounded-2xl border p-4"
-          value={selectedTimeSlot ?? ''}
-          onChange={(e) => setSelectedTimeSlot(e.target.value || null)}
-        >
-          {timeSlots.map((timeSlot) => (
-            <option key={timeSlot} value={timeSlot}>
-              {timeSlot}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            className="txt-14-medium h-[4.4rem] w-full appearance-none rounded-2xl border p-4 pr-10"
+            value={selectedTimeSlot ?? ''}
+            onChange={(e) => setSelectedTimeSlot(e.target.value || null)}
+          >
+            {timeSlots.map((timeSlot) => (
+              <option key={timeSlot} value={timeSlot}>
+                {timeSlot}
+              </option>
+            ))}
+          </select>
+          {/* 드롭다운 아이콘 */}
+          <span className="pointer-events-none absolute top-1/2 right-7 -translate-y-1/2">
+            ▼
+          </span>
+        </div>
       </div>
 
       <div>
@@ -224,16 +230,31 @@ export const ContentReservation: React.FC<ContentReservationProps> = ({
               {activeTab === 'pending' && (
                 <div className="flex flex-col space-y-2">
                   <button
-                    className="txt-12-medium rounded border px-3 py-1"
+                    className="txt-12-medium rounded-full border px-3 py-1 transition-colors hover:border-[#DDF9F9] hover:bg-[#DDF9F9]"
                     onClick={() => handleStatusChange(id, 'confirmed')}
                   >
                     승인하기
                   </button>
                   <button
-                    className="txt-12-medium rounded border px-3 py-1 text-sm"
+                    className="txt-12-medium rounded-full border px-3 py-1 transition-colors hover:border-[#FCECEA] hover:bg-[#FCECEA]"
                     onClick={() => handleStatusChange(id, 'declined')}
                   >
                     거절하기
+                  </button>
+                </div>
+              )}
+
+              {activeTab === 'confirmed' && (
+                <div>
+                  <button className="txt-12-medium rounded-full border border-[#DDF9F9] bg-[#DDF9F9] px-3 py-1 text-[#1790A0]">
+                    예약 승인
+                  </button>
+                </div>
+              )}
+              {activeTab === 'declined' && (
+                <div>
+                  <button className="txt-12-medium rounded-full border border-[#FCECEA] bg-[#FCECEA] px-3 py-1 text-[#F96767]">
+                    예약 거절
                   </button>
                 </div>
               )}

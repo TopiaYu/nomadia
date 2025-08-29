@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 
-import { activityIdStyle } from '@/features/activityId/libs/constants/variants';
+import { textStyle } from '@/features/activityId/libs/constants/variants';
 import { useReviewsQuery } from '@/features/activityId/libs/hooks/useReviewsQuery';
 import { formatRating } from '@/features/activityId/libs/utils/formatRating';
 import Pagination from '@/shared/components/pagination/pagination';
@@ -25,9 +25,9 @@ const Reviews = ({ activityId }: { activityId: number }) => {
         className="flex flex-col gap-[0.8rem]"
       >
         <header className="flex items-center gap-[0.8rem]">
-          <h2 className={activityIdStyle.h2}>체험 후기</h2>
+          <h2 className={textStyle.h2}>체험 후기</h2>
           {data && (
-            <p className="text-[1.4rem] font-semibold text-gray-600">
+            <p className={'text-[1.4rem] font-semibold text-gray-600'}>
               {formatPrice(data?.totalCount)}개
             </p>
           )}

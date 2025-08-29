@@ -9,7 +9,7 @@ import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner'
 import { sortDatesAscending } from '@/shared/libs/utils/parseDate';
 
 import { useBookingQuery } from '../libs/hooks/useBookingQuery';
-import { GetBookingResponse } from '../libs/types/booking';
+import { GetBookingResponse, Reservation } from '../libs/types/booking';
 import FilterButtons from './filter-buttons';
 import GroupedBookingCards from './group-booking-card';
 
@@ -26,9 +26,23 @@ const BookingList = () => {
   };
   const [activeStatus, setActiveStatus] = useState('');
 
+  const filterPastBookings = (reservations: Reservation[]) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return reservations.filter((reservation) => {
+      if (reservation.status === 'pending') {
+        const reservationDate = new Date(reservation.date);
+        reservationDate.setHours(0, 0, 0, 0);
+        return reservationDate >= today;
+      }
+      return true;
+    });
+  };
+
   // 날짜 기준 오름차순 정렬
   const sortedReservations = data?.reservations
-    ? [...data.reservations].sort((a, b) => {
+    ? filterPastBookings(data.reservations).sort((a, b) => {
         const sortedDates = sortDatesAscending([a.date, b.date]);
         return sortedDates[0] === a.date ? -1 : 1;
       })

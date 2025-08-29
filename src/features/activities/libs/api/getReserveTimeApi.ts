@@ -61,6 +61,5 @@ export async function getReserveTimeApi(
   }
 
   const data = await res.json();
-  console.log('API 응답 데이터 전체:', data);
   return data;
 }

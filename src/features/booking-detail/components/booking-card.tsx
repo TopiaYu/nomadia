@@ -6,8 +6,8 @@ import {
   generateResponsiveSizes,
   optimizeImageQuality,
 } from '@/shared/libs/utils/imageOptimization';
+import { Reservation } from '@/shared/types/reservation';
 
-import { Reservation } from '../libs/types/booking';
 import {
   formatBookingTime,
   getStatusColorClass,

@@ -43,25 +43,29 @@ const OwnerDropdown = ({
             </button>
           }
         >
-          <div className="border-sub-300 h-[10.8rem] overflow-hidden rounded-[0.8rem] border bg-white">
-            <button
-              onClick={() =>
-                router.push(`/my/my-activities/activity-edit/${activityId}`)
-              }
-              className="hover:text-main hover:bg-sub h-[5.4rem] w-[9.3rem] cursor-pointer px-[1.8rem] text-[1.6rem]"
-            >
-              수정하기
-            </button>
-            <hr />
-            <button
-              onClick={() => {
-                openModal('delete');
-              }}
-              className="h-[5.4rem] w-[9.3rem] cursor-pointer px-[1.8rem] text-[1.6rem] hover:bg-red-100 hover:text-red-500"
-            >
-              삭제하기
-            </button>
-          </div>
+          {(close) => (
+            <div className="border-sub-300 h-[10.8rem] overflow-hidden rounded-[0.8rem] border bg-white">
+              <button
+                onClick={() => {
+                  router.push(`/my/my-activities/activity-edit/${activityId}`);
+                  close();
+                }}
+                className="hover:text-main hover:bg-sub h-[5.4rem] w-[9.3rem] cursor-pointer px-[1.8rem] text-[1.6rem]"
+              >
+                수정하기
+              </button>
+              <hr />
+              <button
+                onClick={() => {
+                  openModal('delete');
+                  close();
+                }}
+                className="h-[5.4rem] w-[9.3rem] cursor-pointer px-[1.8rem] text-[1.6rem] hover:bg-red-100 hover:text-red-500"
+              >
+                삭제하기
+              </button>
+            </div>
+          )}
         </Dropdown>
       )}
       {modalName === 'delete' && (

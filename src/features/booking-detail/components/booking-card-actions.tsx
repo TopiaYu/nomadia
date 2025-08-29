@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Reservation } from '../libs/types/booking';
+import { Reservation } from '@/shared/types/reservation';
 
 interface BookingCardActionsProps {
   reservation: Reservation;

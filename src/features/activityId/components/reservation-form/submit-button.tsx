@@ -1,4 +1,3 @@
-import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 import { cn } from '@/shared/libs/cn';
 import useWindowSize from '@/shared/libs/hooks/useWindowSize';
@@ -14,9 +13,8 @@ const SubmitButton = ({
   nextStep,
   setNextStep,
 }: SubmitButtonProps) => {
-  const { isLoggedIn } = useAuthStore();
   const { isDesktop, isTablet, isMobile } = useWindowSize();
-  const { appear, appearModal, disappearModal, openModal } = useModalStore();
+  const { appear, appearModal, disappearModal } = useModalStore();
 
   const handleAppear = () => {
     if (!isDesktop && !appear && !isValid) {
@@ -52,10 +50,6 @@ const SubmitButton = ({
         // 예외 처리
         if (!isValid || appear) {
           e.preventDefault();
-        }
-        if (!isLoggedIn) {
-          openModal('need-login');
-          return;
         }
         handleAppear(); // handle appear in !isDesktop
         handleNextStep(); // handle nextStep in Mobile

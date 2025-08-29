@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, []);
 
   const handleBackClick = () => {
-    router.back();
+    router.push('/my');
   };
 
   if (!isClient) {
@@ -43,13 +43,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className={`mx-auto flex justify-center px-[2.4rem] py-[3rem] md:max-w-[68.4rem] md:gap-[3rem] lg:max-w-[98rem] lg:gap-[5rem]`}
+      className={`mx-auto flex justify-center px-[2.4rem] py-[3rem] md:w-[73.2rem] md:gap-[3rem] lg:min-w-[102.4rem] lg:gap-[5rem]`}
     >
       {/* 모바일에서만 보이는 뒤로가기 버튼 */}
       {isMobile && !isMyPageRoot && (
         <button
           onClick={handleBackClick}
-          className="absolute top-[5rem] left-[2.4rem]"
+          className="absolute top-[5.8rem] left-[2.4rem]"
           aria-label="뒤로 가기"
         >
           <Image

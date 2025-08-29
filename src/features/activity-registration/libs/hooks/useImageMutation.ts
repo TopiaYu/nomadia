@@ -53,9 +53,11 @@ export const validateImageFile = (
   // 파일 크기 검사 (MB 단위)
   const fileSizeInMB = file.size / (1024 * 1024);
   if (fileSizeInMB > maxSize) {
+    const errorMessage = `파일 크기는 ${maxSize}MB 이하여야 합니다. (현재: ${fileSizeInMB.toFixed(1)}MB)`;
+    alert(errorMessage);
     return {
       isValid: false,
-      error: `파일 크기는 ${maxSize}MB 이하여야 합니다. (현재: ${fileSizeInMB.toFixed(1)}MB)`,
+      error: errorMessage,
     };
   }
 

@@ -3,8 +3,8 @@ import React from 'react';
 import { useScheduleIdStore } from '@/features/activityId/libs/stores/useScheduleIdStore';
 import { useReservationIdStore } from '@/features/booking-detail/libs/stores/useReservationIdStore';
 import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
+import { Reservation } from '@/shared/types/reservation';
 
-import { Reservation } from '../libs/types/booking';
 import BookingCard from './booking-card';
 
 interface BookingCardContainerProps {
@@ -45,6 +45,7 @@ const BookingCardContainer = ({
   // 후기 작성 버튼 클릭 시 모달 열기
   const handleReviewClick = () => {
     setReservationId(reservation.id);
+    openModal();
   };
 
   return (

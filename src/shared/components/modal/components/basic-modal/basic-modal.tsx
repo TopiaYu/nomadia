@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 
 import ModalContent from '@/shared/components/modal/components/modal-content';
 import { useKeydownEsc } from '@/shared/components/modal/libs/hooks/useKeydownEsc';
+import { useLockBodyScroll } from '@/shared/components/modal/libs/hooks/useLockBodyScroll';
 import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 
 /**
@@ -28,6 +29,7 @@ const BasicModal = ({
   const { isModalOpen, closeModal, setModalType } = useModalStore();
   const [isIconLoaded, setIsIconLoaded] = useState(false);
   useKeydownEsc(closeModal, isModalOpen, isIconLoaded);
+  useLockBodyScroll(isModalOpen);
 
   // 마운트 시 전역 타입 등록 - modal-button, modal-header에서 사용
   useEffect(() => {

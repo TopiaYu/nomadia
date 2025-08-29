@@ -1,30 +1,59 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-import AllActivities from '@/features/activities/components/all-activities';
+// 즉시 로드
 import BannerCarousel from '@/features/activities/components/banner-carousel';
-import BestActivities from '@/features/activities/components/best-activities';
 import Search from '@/features/activities/components/search';
-import SearchResults from '@/features/activities/components/search-result';
+import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
+
+// 지연 로드 (성능 최적화) - Next.js dynamic 사용
+const BestActivities = dynamic(
+  () => import('@/features/activities/components/best-activities'),
+);
+
+const AllActivities = dynamic(
+  () => import('@/features/activities/components/all-activities'),
+);
+
+const SearchResults = dynamic(
+  () => import('@/features/activities/components/search-result'),
+);
 
 const ActivitiesPageContent = () => {
   const searchParams = useSearchParams();
-  const keyword = searchParams.get('search')?.trim() || '';
-  const isSearching = keyword.trim().length > 0;
+
+  const keyword = searchParams.get('keyword')?.trim() || '';
+  const region = searchParams.get('region')?.trim() || '';
+  const category = searchParams.get('category')?.trim() || '';
+
+  const isSearching =
+    keyword.length > 0 || region.length > 0 || category.length > 0;
 
   return (
     <main className="bg-background flex w-full flex-col gap-10">
       <div className="mx-auto w-full max-w-[120rem]">
+        {/* 즉시 로드*/}
         <BannerCarousel />
         <Search />
 
         {isSearching ? (
-          <SearchResults keyword={keyword} />
+          <Suspense fallback={<LoadingSpinner />}>
+            <SearchResults />
+          </Suspense>
         ) : (
           <>
-            <BestActivities />
-            <AllActivities />
+            {/* 지연 로드: 인기 체험 */}
+            <Suspense fallback={<LoadingSpinner />}>
+              <BestActivities />
+            </Suspense>
+
+            {/* 지연 로드: 전체 체험 목록 */}
+            <Suspense fallback={<LoadingSpinner />}>
+              <AllActivities />
+            </Suspense>
           </>
         )}
       </div>

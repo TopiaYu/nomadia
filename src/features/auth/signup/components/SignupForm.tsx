@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 
 import { FormInput } from '@/shared/components/form-input/form-input';
 
-import { signup as apiSignup } from '../../api/auth.api';
 import { SignupFormType, signupSchema } from '../../validators/auth.schema';
 
 export const SignupForm = () => {
@@ -24,10 +23,8 @@ export const SignupForm = () => {
 
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<SignupFormType> = async (data) => {
+  const onSubmit: SubmitHandler<SignupFormType> = async () => {
     try {
-      const response = await apiSignup(data);
-      console.log(response);
       toast.success('회원가입 성공');
       router.push('./login');
     } catch (error) {

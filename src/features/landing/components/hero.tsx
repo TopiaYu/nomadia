@@ -4,9 +4,10 @@ import type { Swiper as SwiperType } from 'swiper';
 import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { ErrorMessage } from '@/shared/components/error-message/error-message';
 import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
-import useActivity from '@/shared/libs/hooks/useActivityQuery';
+import useActivityQuery from '@/shared/libs/hooks/useActivityQuery';
 import type { Activity } from '@/shared/types/activity';
 
 interface HeroProps {
@@ -21,13 +22,25 @@ interface HeroProps {
  * @author 김영현
  */
 const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
-  const { data, isLoading, isError } = useActivity({
+  const { data, isLoading, isError } = useActivityQuery({
     sort: 'most_reviewed',
     page: 1,
     size: 8,
   });
 
-  const activities = data?.activities ?? [];
+  // 로그인 여부 확인
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  // 버튼 클릭 핸들러
+  const handleButtonClick = () => {
+    if (isLoggedIn) {
+      router.push('/my/my-activities');
+    } else {
+      router.push('/login');
+    }
+  };
+
+  const activities = data?.pages?.flatMap((page) => page.activities) ?? [];
 
   return (
     <div className="bg-background">
@@ -56,14 +69,14 @@ const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
           </div>
           <div className="mb-16 flex justify-center space-x-4">
             <button
-              className="bg-main max-w-xs flex-1 cursor-pointer rounded-full px-8 py-3 text-[1.4rem] font-semibold text-white transition-colors hover:opacity-90 md:text-[1.8rem]"
+              className="bg-main btn-action-landing-blue max-w-xs flex-1 cursor-pointer rounded-full px-8 py-3 text-[1.4rem] font-semibold text-white transition-colors md:text-[1.8rem]"
               onClick={() => router.push('/activities')}
             >
               체험 찾기
             </button>
             <button
-              className="bg-sub text-main max-w-xs flex-1 cursor-pointer rounded-full px-8 py-3 text-[1.4rem] font-semibold transition-colors hover:opacity-80 md:text-[1.8rem]"
-              onClick={() => router.push('/activities')}
+              className="bg-sub text-main btn-action-landing-white max-w-xs flex-1 cursor-pointer rounded-full px-8 py-3 text-[1.4rem] font-semibold transition-colors md:text-[1.8rem]"
+              onClick={handleButtonClick}
             >
               호스트 되기
             </button>
@@ -85,13 +98,13 @@ const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
             <div className="flex space-x-2">
               <button
                 onClick={() => swiperRef.current?.slidePrev()}
-                className="bg-sub cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-200"
+                className="btn-action-carousel border-sub bg-sub cursor-pointer rounded-full border-1 p-2 transition-colors"
               >
                 <ChevronLeft className="h-5 w-5 md:h-7 md:w-7" />
               </button>
               <button
                 onClick={() => swiperRef.current?.slideNext()}
-                className="bg-sub cursor-pointer rounded-full p-2 transition-colors hover:bg-gray-200"
+                className="btn-action-carousel border-sub bg-sub cursor-pointer rounded-full border-1 p-2 transition-colors"
               >
                 <ChevronRight className="h-5 w-5 md:h-7 md:w-7" />
               </button>

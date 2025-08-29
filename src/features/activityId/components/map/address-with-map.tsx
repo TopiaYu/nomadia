@@ -1,11 +1,11 @@
 import KakaoMap from '@/features/activityId/components/map/kakao-map';
-import { activityIdStyle } from '@/features/activityId/libs/constants/variants';
+import { textStyle } from '@/features/activityId/libs/constants/variants';
 
 const AddressWithMap = ({ address }: { address: string | undefined }) => {
   return (
     <>
       <section className="flex flex-col gap-[0.8rem]">
-        <h2 className={activityIdStyle.h2}>오시는 길</h2>
+        <h2 className={textStyle.h2}>오시는 길</h2>
         <p className="text-[1.4rem] font-semibold text-gray-800">{address}</p>
         <div
           id="map"

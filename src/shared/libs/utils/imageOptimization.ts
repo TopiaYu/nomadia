@@ -1,22 +1,4 @@
 /**
- * 이미지 최적화 유틸리티
- * @description LCP 시간 단축을 위한 이미지 최적화 도구들
- */
-
-/**
- * 이미지 우선순위 결정 함수
- * @param index - 이미지 인덱스
- * @param maxPriority - 최대 우선순위 이미지 수 (기본값: 4)
- * @returns 우선순위 여부
- */
-export const shouldPrioritizeImage = (
-  index: number,
-  maxPriority: number = 4,
-): boolean => {
-  return index < maxPriority;
-};
-
-/**
  * 이미지 품질 최적화
  * @param isPriority - 우선순위 이미지 여부
  * @param baseQuality - 기본 품질 (기본값: 75)

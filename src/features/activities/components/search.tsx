@@ -1,9 +1,12 @@
 'use client';
 
-import { SearchIcon } from 'lucide-react';
+import { Search as SearchIcon, X } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
+import { getActListApi } from '@/features/activities/libs/api/getActListApi';
+import Dropdown from '@/shared/components/dropdown/dropdown';
+import { Button } from '@/shared/components/modal/components/modal-button';
 import { searchVariant } from '@/shared/libs/constants/searchVariant';
 
 interface SearchProps {
@@ -13,54 +16,176 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({
   placeholder = '내가 원하는 체험은',
+  setKeyword: externalSetKeyword,
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const defaultValue = searchParams.get('search') ?? '';
+
+  const defaultValue = searchParams.get('keyword') ?? '';
+  const defaultRegion = searchParams.get('region') ?? '';
+  const defaultCategory = searchParams.get('category') ?? '';
+
+  // 상태
   const [keyword, setKeyword] = useState(defaultValue);
+  const [region, setRegion] = useState(defaultRegion);
+  const [category, setCategory] = useState(defaultCategory);
   const [isFocused, setIsFocused] = useState(false);
 
+  const [regionOptions, setRegionOptions] = useState<string[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
+
   useEffect(() => {
-    setKeyword(defaultValue);
-  }, [defaultValue]);
+    if (externalSetKeyword) {
+      externalSetKeyword(keyword);
+    }
+  }, [keyword, externalSetKeyword]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { activities } = await getActListApi();
+
+        // 지역
+        const addresses = activities
+          .map((act) => act.address?.split(' ')[0])
+          .filter((addr): addr is string => Boolean(addr));
+        setRegionOptions([...new Set(addresses)]);
+
+        // 카테고리
+        const categories = activities
+          .map((act) => act.category)
+          .filter((cat): cat is string => Boolean(cat));
+        setCategoryOptions([...new Set(categories)]);
+      } catch (err) {
+        console.error('데이터 불러오기 실패:', err);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSearch = () => {
-    const trimmed = keyword.trim();
-    if (!trimmed) {
-      router.push('/activities');
-    } else {
-      router.push(`/activities?search=${encodeURIComponent(trimmed)}`);
-    }
+    const params = new URLSearchParams(searchParams.toString());
+
+    const k = keyword.trim();
+    const r = region.trim();
+    const c = category.trim();
+
+    [
+      ['keyword', k],
+      ['region', r],
+      ['category', c],
+    ].forEach(([key, value]) =>
+      value ? params.set(key, value) : params.delete(key),
+    );
+
+    params.set('page', '1');
+    router.push(`/activities?${params.toString()}`);
   };
 
   const style = searchVariant.main;
+
+  const dropdownBtnClass =
+    'flex w-[20rem] items-center justify-between rounded txt-14-medium text-gray-700 bg-transparent hover:bg-gray-50';
+
+  const dropdownMenuClass =
+    'mt-1 w-full bg-white rounded shadow-md txt-14-medium';
+
+  const optionBtnClass =
+    'w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-blue-50';
 
   return (
     <div className={style.wrapper}>
       <p className={style.title}>무엇을 체험하고 싶으신가요?</p>
       <div className={style.inputBox}>
-        <SearchIcon className="text-gray-950" size={24} />
         <input
           type="text"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch();
-            }
-          }}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={isFocused ? '' : placeholder}
           className={style.input}
         />
-        <button
-          type="button"
+
+        <div className="mx-5 h-12 border-r border-gray-300"></div>
+
+        {/* 지역 */}
+        <div className="flex items-center gap-2">
+          <Dropdown
+            trigger={
+              <button type="button" className={dropdownBtnClass}>
+                <span>{region || '지역'}</span>
+              </button>
+            }
+            dropdownClassName={dropdownMenuClass}
+          >
+            {regionOptions.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={optionBtnClass}
+                onClick={() => setRegion(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </Dropdown>
+          {region && (
+            <button
+              type="button"
+              onClick={() => setRegion('')}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <X className="size-6" />
+            </button>
+          )}
+        </div>
+
+        <div className="mx-5 h-12 border-r border-gray-300"></div>
+
+        {/* 카테고리 */}
+        <div className="flex items-center gap-2">
+          <Dropdown
+            trigger={
+              <button type="button" className={dropdownBtnClass}>
+                <span>{category || '카테고리'}</span>
+              </button>
+            }
+            dropdownClassName={dropdownMenuClass}
+          >
+            {categoryOptions.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={optionBtnClass}
+                onClick={() => setCategory(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </Dropdown>
+          {category && (
+            <button
+              type="button"
+              onClick={() => setCategory('')}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <X className="size-6" />
+            </button>
+          )}
+        </div>
+
+        <div className="mx-5 h-12 border-r border-gray-300"></div>
+
+        <Button
+          color="blue"
+          ariaLabel="검색하기"
           onClick={handleSearch}
-          className={`${style.button} cursor-pointer`}
+          extraClassName={`${style.button} mx-7 flex items-center justify-center !w-[5rem] !h-[5rem] rounded-full`}
         >
-          검색하기
-        </button>
+          <SearchIcon className="h-8 w-8" />
+        </Button>
       </div>
     </div>
   );

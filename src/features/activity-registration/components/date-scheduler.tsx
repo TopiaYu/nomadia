@@ -4,7 +4,7 @@ import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
 import { TIME_OPTIONS } from '@/features/activity-registration/libs/constants/formOption';
 import { validateTimeRange } from '@/features/activity-registration/libs/utils';
-import { getTodayDateString } from '@/shared/libs/utils/parseDate';
+import { getTomorrowDateString } from '@/shared/libs/utils/parseDate';
 import {
   ActivityRegistrationFormData,
   Schedule,
@@ -53,6 +53,7 @@ const DateScheduler = ({
     [schedules],
   );
 
+  // 다음 시간 옵션 반환
   const getNextHour = useCallback((startTime: string): string => {
     const currentIndex = TIME_OPTIONS.findIndex(
       (option) => option.value === startTime,
@@ -63,6 +64,7 @@ const DateScheduler = ({
     return startTime;
   }, []);
 
+  // 스케줄 추가
   const addSchedule = useCallback(() => {
     const newSchedule: Schedule = {
       date: '',
@@ -82,6 +84,7 @@ const DateScheduler = ({
     [schedules, onChange],
   );
 
+  // 스케줄 업데이트
   const updateSchedule = useCallback(
     (index: number, field: keyof Schedule, value: string) => {
       // 사용자가 상호작용했음을 표시
@@ -101,12 +104,6 @@ const DateScheduler = ({
           // 시작 시간 변경 시 종료 시간 자동 설정
           if (field === 'startTime' && value) {
             updated.endTime = getNextHour(value);
-          }
-
-          // 날짜 변경 시 시작 시간과 종료 시간 초기화 (새로운 날짜이므로)
-          if (field === 'date' && value) {
-            updated.startTime = '';
-            updated.endTime = '';
           }
 
           return updated;
@@ -163,7 +160,7 @@ const DateScheduler = ({
                   type="date"
                   {...(register && register(`schedules.${index}.date`))}
                   value={schedule.date}
-                  min={getTodayDateString()}
+                  min={getTomorrowDateString() || ''}
                   onChange={(e) =>
                     updateSchedule(index, 'date', e.target.value)
                   }

@@ -4,10 +4,10 @@ import { toast } from 'sonner';
 
 import Modal from '@/shared/components/modal/components';
 import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
+import { Reservation } from '@/shared/types/reservation';
 
 import { useCancelMutation } from '../libs/hooks/useCancelMutation';
 import { usePostReviewMutation } from '../libs/hooks/usePostReviewMutation';
-import { Reservation } from '../libs/types/booking';
 import StarRating from './star-rating';
 
 interface BookingModalProps {

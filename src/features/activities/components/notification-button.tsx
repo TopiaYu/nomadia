@@ -9,7 +9,7 @@ import { useNotificationStore } from '@/shared/libs/stores/useNotificationStore'
 
 const NotificationButton = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const { isNotificationOpen, openNotification, closeNotification } =
+  const { isNotificationOpen, toggleNotification, closeNotification } =
     useNotificationStore();
 
   const { data } = useNotifications();
@@ -29,7 +29,10 @@ const NotificationButton = () => {
 
   return (
     <div className="relative" ref={ref}>
-      <button className="cursor-pointer rounded p-2" onClick={openNotification}>
+      <button
+        className="cursor-pointer rounded p-2"
+        onClick={toggleNotification}
+      >
         <Image
           src={
             hasNotifications

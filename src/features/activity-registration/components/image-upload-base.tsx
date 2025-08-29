@@ -3,7 +3,6 @@
 import { CirclePlus, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
 
 import {
   createImageFormData,
@@ -127,9 +126,10 @@ const ImageUploadBase = ({
     // 파일 유효성 검사 (4MB 제한)
     const validation = validateImageFile(file, 4);
     if (!validation.isValid) {
-      toast.error(validation.error);
       return;
     }
+
+    // 중복 체크 비활성화 (사용자가 원하는 대로 이미지를 업로드할 수 있도록)
 
     // 로컬 이미지 URL 생성 (미리보기용)
     const localUrl = URL.createObjectURL(file);
@@ -185,7 +185,13 @@ const ImageUploadBase = ({
   // 파일 입력 클릭 핸들러
   const handleUploadClick = () => {
     if (canAddMore) {
+      // 파일 입력 value 초기화 (동일한 파일 재선택을 위해)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       fileInputRef.current?.click();
+    } else {
+      alert('더 이상 이미지를 추가할 수 없습니다.');
     }
   };
 
@@ -262,7 +268,7 @@ const ImageUploadBase = ({
             <button
               type="button"
               onClick={() => handleRemoveImage(index)}
-              className="bg-opacity-70 flex-center absolute -top-[0.5rem] -right-[0.7rem] h-[2rem] w-[2rem] rounded-full bg-gray-950 text-white md:h-[2.6rem] md:w-[2.6rem]"
+              className="bg-opacity-70 flex-center absolute -top-[0.5rem] -right-[0.7rem] h-[2rem] w-[2rem] cursor-pointer rounded-full bg-gray-950 text-white md:h-[2.6rem] md:w-[2.6rem]"
             >
               <X size={10} className="font-bold md:size-[1.8rem]" />
             </button>
@@ -283,7 +289,9 @@ const ImageUploadBase = ({
         type="file"
         name={name}
         accept="image/*"
-        onChange={(e) => handleFileSelect(e.target.files)}
+        onChange={(e) => {
+          handleFileSelect(e.target.files);
+        }}
         className="hidden"
       />
 

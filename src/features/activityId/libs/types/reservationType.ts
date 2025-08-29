@@ -4,7 +4,7 @@ export interface ReviewSubmitted {
   userId: number;
   activityId: number;
   scheduleId: number;
-  status: 'pending' | 'confirmed' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'canceled';
   reviewSubmitted: boolean;
   totalPrice: number;
   headCount: number;

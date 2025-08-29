@@ -138,7 +138,7 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
               <ActivityCard
                 key={activity.id}
                 activity={activity}
-                isPriority={index < 8}
+                isPriority={index < 2}
               />
             ))
           )}

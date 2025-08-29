@@ -36,7 +36,7 @@ const Cta = ({ steps, router }: CtaProps) => (
       </div>
       {/* CTA Button */}
       <button
-        className="bg-main w-[24rem] cursor-pointer rounded-full px-12 py-4 text-[1.8rem] font-semibold text-white transition-colors hover:opacity-90 md:w-[34rem] lg:w-[40rem]"
+        className="bg-main btn-action-landing-blue w-[24rem] cursor-pointer rounded-full px-12 py-4 text-[1.8rem] font-semibold text-white transition-colors md:w-[34rem] lg:w-[40rem]"
         onClick={() => router.push('/activities')}
       >
         시작하기

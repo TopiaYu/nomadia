@@ -348,3 +348,12 @@
 .btn-action-gray {
   @apply hover:bg-gray-300 hover:text-white active:border-gray-300;
 }
+.btn-action-carousel {
+  @apply hover:bg-sub-300 hover:text-main active:text-main-600 active:bg-sub-300;
+}
+.btn-action-landing-blue {
+  @apply hover:bg-main-600 active:bg-main-700 hover:text-white;
+}
+.btn-action-landing-white {
+  @apply hover:bg-sub-300 hover:text-main-700 active:text-main-600 active:bg-sub-50;
+}
