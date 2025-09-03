@@ -91,7 +91,7 @@ const BookingModal = ({
       type={statusLabel === '예약 신청' ? 'warning' : 'custom'}
       extraClassName={
         statusLabel === '체험 완료'
-          ? 'w-full h-[47.9rem] mx-[2.4rem] md:w-[50rem] md:h-[54.9rem]'
+          ? 'w-full h-[47.9rem]  md:w-[50rem] md:h-[54.9rem]'
           : ''
       }
     >

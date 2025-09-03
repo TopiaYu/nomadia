@@ -5,6 +5,9 @@ import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+// 서버 api 호출
+export const apiServer = axios.create({ baseURL });
+
 // refresh용 api 호출
 export const apiForRefresh = axios.create({
   baseURL,

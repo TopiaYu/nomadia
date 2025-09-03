@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 
+import { useModalStore } from '@/shared/components';
 import { formatPrice } from '@/shared/libs/utils/formatPrice';
 import {
   generateResponsiveSizes,
@@ -52,6 +53,7 @@ const BookingCard = ({
   const statusLabel = getStatusLabel(reservation.status);
   const statusColorClass = getStatusColorClass(reservation.status);
   const time = formatBookingTime(reservation.startTime, reservation.endTime);
+  const { modalName } = useModalStore();
 
   return (
     <div className="flex w-full max-w-[50rem] flex-col gap-[1.2rem] lg:max-w-[60rem]">
@@ -81,7 +83,6 @@ const BookingCard = ({
           />
         </div>
 
-        {/* 흰색 카드 - 세밀한 브레이크포인트 추가 */}
         <div className="relative flex h-full w-[70%] flex-col justify-between gap-[0.8rem] rounded-[2.4rem] bg-white px-[2.2rem] py-[2rem] min-[470px]:w-[75%] sm:w-[75%] md:w-[75%]">
           {/* 상단 정보 영역 */}
           <div className="mb-[0.2rem] flex w-full flex-col">
@@ -123,12 +124,14 @@ const BookingCard = ({
       {showDivider && <div className="mt-[3rem] h-[1px] w-full bg-gray-50" />}
 
       {/* 모달 */}
-      <BookingModal
-        reservation={reservation}
-        statusLabel={statusLabel}
-        isOpen={isModalOpen}
-        onClose={onModalClose || (() => {})}
-      />
+      {modalName === 'delete-review-modal' && (
+        <BookingModal
+          reservation={reservation}
+          statusLabel={statusLabel}
+          isOpen={isModalOpen}
+          onClose={onModalClose || (() => {})}
+        />
+      )}
     </div>
   );
 };

@@ -1,16 +1,14 @@
-'use client';
-import { GalleryThumbnails } from 'lucide-react';
 import Image from 'next/image';
 
+import SubImagesButton from '@/features/activityId/components/sub-images-button';
 import SubImagesModal from '@/features/activityId/components/sub-images-modal';
 import { SubImages as SubImagesType } from '@/features/activityId/libs/types/activityInfo';
-import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
 import { cn } from '@/shared/libs/cn';
 
 const SubImages = ({ images }: { images: SubImagesType[] | undefined }) => {
-  const { modalName, openModal } = useModalStore();
   if (images === undefined) return null;
   const length = images.length;
+  const noImage = !images || images.length === 0;
 
   return (
     <>
@@ -25,14 +23,13 @@ const SubImages = ({ images }: { images: SubImagesType[] | undefined }) => {
       >
         {images.map((image, i) => {
           return (
-            <button
+            <div
               key={i}
               className={cn(
                 'relative size-full',
                 length === 3 && i === 0 && 'row-span-2',
                 length === 4 && i === 0 && 'row-span-3',
               )}
-              onClick={() => openModal('image-modal')}
             >
               <Image
                 key={i}
@@ -40,21 +37,14 @@ const SubImages = ({ images }: { images: SubImagesType[] | undefined }) => {
                 alt="activity-image"
                 fill
                 className="object-cover"
+                priority={i === 0}
               />
-            </button>
+            </div>
           );
         })}
-        {length > 1 && (
-          <button
-            className="flex-center btn-action-blue absolute right-[1.6rem] bottom-[1.6rem] cursor-pointer gap-[0.4rem] rounded-[0.6rem] bg-white px-[0.8rem] py-[0.4rem] text-[1.2rem] md:right-[2.4rem] md:bottom-[2.4rem] md:gap-[0.6rem] md:rounded-[0.6rem] md:px-[1.2rem] md:py-[0.8rem] md:text-[1.4rem]"
-            onClick={() => openModal('image-modal')}
-          >
-            <GalleryThumbnails className="size-[1rem] md:size-[1.8rem]" />
-            이미지 전체
-          </button>
-        )}
+        {length > 1 && <SubImagesButton />}
       </div>
-      {modalName === 'image-modal' && <SubImagesModal images={images} />}
+      {!noImage && <SubImagesModal images={images} />}
     </>
   );
 };

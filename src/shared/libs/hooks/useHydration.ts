@@ -7,5 +7,5 @@ export default function useHydration() {
     setHydrated(true);
   }, []);
 
-  return () => hydrated;
+  return hydrated;
 }

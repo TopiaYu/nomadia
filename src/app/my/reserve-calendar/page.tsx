@@ -1,5 +1,6 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
@@ -20,104 +21,28 @@ import { useModalStore } from '@/shared/components/modal/libs/stores/useModalSto
 import useWindowSize from '@/shared/libs/hooks/useWindowSize';
 import { Activity } from '@/shared/types/activity';
 
-const ReserveCalendarPage = () => {
-  const [reservationArray, setReservationArray] = useState<MonthReservations[]>(
-    [],
-  );
-  const { user } = useAuthStore();
-  const userId = user?.id;
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [selectedActivityTitle, setSelectedActivityTitle] =
-    useState<string>('내가 등록한 체험 선택');
-  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(
-    null,
-  );
-  const [shouldFetch, setShouldFetch] = useState(false);
-  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-    null,
-  );
+interface Reservation {
+  id: string;
+  scheduleId: number;
+  status: 'pending' | 'confirmed' | 'declined';
+  date: string;
+  [key: string]: unknown;
+}
 
-  const { appearModal, disappearModal } = useModalStore();
-  const { isDesktop } = useWindowSize();
-  const {
-    month,
-    setYear,
-    setMonth,
-    resetDate,
-    resetSelectedDate,
-    selectedDate,
-  } = useCalendarStore();
-  const { accessToken } = useAuthStore();
+interface ReservationsByActivity {
+  allReservations: MonthReservations[];
+  earliestDate: Date | null;
+}
 
-  const calendarRef = useRef<HTMLDivElement>(null);
-  const modalPosition = useResModalPosition(calendarRef);
+const useReservationsByActivity = (activityId: string | null, month: number) =>
+  useQuery<ReservationsByActivity>({
+    queryKey: ['reservationsByActivity', activityId, month],
+    queryFn: async () => {
+      if (!activityId) return { allReservations: [], earliestDate: null };
 
-  useEffect(() => {
-    if (selectedDate && !isDesktop) {
-      appearModal();
-    } else {
-      disappearModal();
-    }
-  }, [selectedDate, appearModal, disappearModal, isDesktop]);
-
-  const handleDropdownOpen = () => {
-    setShouldFetch(true);
-  };
-
-  const handleDateClick = async (dateStr: string) => {
-    if (!selectedActivityId || !accessToken) {
-      setSelectedScheduleId(null);
-      return;
-    }
-
-    try {
-      const res = await getReservations({
-        actId: selectedActivityId,
-        date: dateStr,
-        token: accessToken,
-      });
-
-      const scheduleIdFromApi = res?.[0]?.scheduleId ?? null;
-      if (scheduleIdFromApi) {
-        setSelectedScheduleId(scheduleIdFromApi);
-      } else {
-        setSelectedScheduleId(null);
-      }
-    } catch (err) {
-      console.error('[❌] 예약 스케줄 조회 실패:', err);
-      setSelectedScheduleId(null);
-    }
-  };
-
-  useEffect(() => {
-    if (!shouldFetch || !userId) return;
-
-    (async () => {
-      try {
-        const data = await getActListApi();
-        const myActivities = (data.activities || []).filter(
-          (act) => act.userId === Number(userId),
-        );
-        setActivities(myActivities);
-      } catch (error) {
-        console.error('내 체험 리스트 조회 실패', error);
-      }
-      setShouldFetch(false);
-    })();
-  }, [shouldFetch, userId]);
-
-  const handleSelectActivity = async (id: string | number, title: string) => {
-    setSelectedActivityTitle(title);
-    const activityId = String(id);
-    setSelectedActivityId(activityId);
-    setSelectedScheduleId(null);
-    resetDate();
-    resetSelectedDate();
-
-    try {
       const currentYear = new Date().getFullYear();
       const monthsToFetch = 12;
-      let earliestDate: Date | null = null; // 이건 뭘 위한 조건인지?
+      let earliestDate: Date | null = null;
       let allReservations: MonthReservations[] = [];
 
       for (let i = 0; i < monthsToFetch; i++) {
@@ -140,16 +65,119 @@ const ReserveCalendarPage = () => {
         if (earliestDate) break;
       }
 
-      setReservationArray(allReservations);
+      return { allReservations, earliestDate };
+    },
+    enabled: !!activityId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-      if (earliestDate) {
-        setYear(earliestDate.getFullYear());
-        setMonth(earliestDate.getMonth());
-      }
-    } catch (error) {
-      console.error('예약 데이터 조회 실패', error);
-      setReservationArray([]);
+const ReserveCalendarPage = () => {
+  const [reservationArray, setReservationArray] = useState<MonthReservations[]>(
+    [],
+  );
+  const { user, accessToken } = useAuthStore();
+  const userId = user?.id;
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [selectedActivityTitle, setSelectedActivityTitle] =
+    useState<string>('내가 등록한 체험 선택');
+  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(
+    null,
+  );
+  const [shouldFetch, setShouldFetch] = useState(false);
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number[]>([]);
+
+  const { appearModal, disappearModal } = useModalStore();
+  const { isDesktop } = useWindowSize();
+  const {
+    month,
+    setYear,
+    setMonth,
+    resetDate,
+    resetSelectedDate,
+    selectedDate,
+  } = useCalendarStore();
+
+  const calendarRef = useRef<HTMLDivElement>(null);
+  const modalPosition = useResModalPosition(calendarRef);
+
+  useEffect(() => {
+    if (selectedDate && !isDesktop) {
+      appearModal();
+    } else {
+      disappearModal();
     }
+  }, [selectedDate, appearModal, disappearModal, isDesktop]);
+
+  useEffect(() => {
+    if (!shouldFetch || !userId) return;
+
+    (async () => {
+      try {
+        const data = await getActListApi();
+        const myActivities = (data.activities || []).filter(
+          (act) => act.userId === Number(userId),
+        );
+        setActivities(myActivities);
+      } catch (error) {
+        console.error('내 체험 리스트 조회 실패', error);
+      }
+      setShouldFetch(false);
+    })();
+  }, [shouldFetch, userId]);
+
+  const handleDropdownOpen = () => setShouldFetch(true);
+
+  const handleDateClick = async (dateStr: string) => {
+    setSelectedScheduleId([]);
+    if (!selectedActivityId || !accessToken) return;
+
+    try {
+      const dayReservations: Reservation[] = await getReservations({
+        actId: selectedActivityId,
+        date: dateStr,
+        token: accessToken,
+      });
+
+      if (dayReservations.length === 0) {
+        setSelectedScheduleId([]);
+        return;
+      }
+
+      const uniqScheduleIds: number[] = Array.from(
+        new Set(dayReservations.map((r: Reservation) => r.scheduleId)),
+      );
+
+      setSelectedScheduleId(uniqScheduleIds);
+    } catch (err) {
+      console.error('[❌] 날짜별 예약 조회 실패:', err);
+      setSelectedScheduleId([]);
+    }
+  };
+
+  // 선택된 체험에 대한 예약 가져오기
+  const { data, refetch } = useReservationsByActivity(
+    selectedActivityId,
+    month,
+  );
+
+  // data가 바뀌면 reservationArray, 캘린더 초기화
+  useEffect(() => {
+    if (data) {
+      setReservationArray(data.allReservations);
+      if (data.earliestDate) {
+        setYear(data.earliestDate.getFullYear());
+        setMonth(data.earliestDate.getMonth());
+      }
+    }
+  }, [data, setYear, setMonth]);
+
+  const handleSelectActivity = (id: string | number, title: string) => {
+    setSelectedActivityTitle(title);
+    setSelectedActivityId(String(id));
+    setSelectedScheduleId([]);
+    resetDate();
+    resetSelectedDate();
+    refetch();
   };
 
   const updateReservationStatus = (
@@ -165,14 +193,13 @@ const ReserveCalendarPage = () => {
 
   const selectedReservationsOfDate = React.useMemo(() => {
     if (!selectedDate) return [];
-    return reservationArray.filter((res) => {
-      const rDateStr = res.date.split('T')[0];
-      return rDateStr === selectedDate;
-    });
+    return reservationArray.filter(
+      (res) => res.date.split('T')[0] === selectedDate,
+    );
   }, [selectedDate, reservationArray]);
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start py-[1rem]">
       <div className="mb-[2.4rem] w-full">
         <h2 className="txt-18-bold text-gray-950">예약 현황</h2>
         <p className="txt-14-medium mt-1 text-gray-500">
@@ -239,9 +266,7 @@ const ReserveCalendarPage = () => {
                       <ContentReservation
                         teamId="15-6"
                         activityId={Number(selectedActivityId)}
-                        scheduleId={
-                          selectedScheduleId ? [selectedScheduleId] : []
-                        }
+                        scheduleId={selectedScheduleId}
                         status={'pending'}
                         selectedDate={selectedDate || ''}
                         onStatusChange={updateReservationStatus}

@@ -1,22 +1,8 @@
-import axios from 'axios';
-
+import api from '@/shared/libs/api/axios';
 import {
   GetActListApiParams,
   GetActListApiResponse,
 } from '@/shared/types/activity';
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-if (!BASE_URL) {
-  throw new Error('NEXT_PUBLIC_API_BASE_URL 환경 변수가 설정되지 않았습니다.');
-}
-
-const instance = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 /**
  * 체험 리스트 조회 GET 요청
@@ -28,6 +14,6 @@ const instance = axios.create({
 export const getActListApi = async (
   params?: GetActListApiParams,
 ): Promise<GetActListApiResponse> => {
-  const { data } = await instance.get('activities?method=offset', { params });
+  const { data } = await api.get('/activities?method=offset', { params });
   return data;
 };

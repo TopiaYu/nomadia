@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 
+import { useKeydownEnter } from '@/shared/components/modal/libs/hooks/useKeydownEnter';
 import {
   modalButtonClasses,
   modalButtonColorClasses,
@@ -35,6 +36,7 @@ export const Button = ({
   children: ReactNode;
 }) => {
   const { modalType } = useModalStore();
+  useKeydownEnter(onClick, color);
 
   return (
     <button

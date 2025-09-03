@@ -5,40 +5,27 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { getActListApi } from '@/features/activities/libs/api/getActListApi';
+import { useSearchStore } from '@/features/activities/libs/stores/searchStore';
 import Dropdown from '@/shared/components/dropdown/dropdown';
 import { Button } from '@/shared/components/modal/components/modal-button';
 import { searchVariant } from '@/shared/libs/constants/searchVariant';
 
 interface SearchProps {
   placeholder?: string;
-  setKeyword?: (value: React.SetStateAction<string>) => void;
 }
 
 const Search: React.FC<SearchProps> = ({
   placeholder = '내가 원하는 체험은',
-  setKeyword: externalSetKeyword,
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const defaultValue = searchParams.get('keyword') ?? '';
-  const defaultRegion = searchParams.get('region') ?? '';
-  const defaultCategory = searchParams.get('category') ?? '';
+  const { keyword, setKeyword, region, setRegion, category, setCategory } =
+    useSearchStore();
 
-  // 상태
-  const [keyword, setKeyword] = useState(defaultValue);
-  const [region, setRegion] = useState(defaultRegion);
-  const [category, setCategory] = useState(defaultCategory);
   const [isFocused, setIsFocused] = useState(false);
-
   const [regionOptions, setRegionOptions] = useState<string[]>([]);
   const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (externalSetKeyword) {
-      externalSetKeyword(keyword);
-    }
-  }, [keyword, externalSetKeyword]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,13 +72,13 @@ const Search: React.FC<SearchProps> = ({
   const style = searchVariant.main;
 
   const dropdownBtnClass =
-    'flex w-[20rem] items-center justify-between rounded txt-14-medium text-gray-700 bg-transparent hover:bg-gray-50';
+    'flex w-[20rem] items-center justify-between rounded txt-14-medium text-gray-700 bg-transparent hover:bg-gray-50 cursor-pointer';
 
   const dropdownMenuClass =
     'mt-1 w-full bg-white rounded shadow-md txt-14-medium';
 
   const optionBtnClass =
-    'w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-blue-50';
+    'w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-blue-50 cursor-pointer';
 
   return (
     <div className={style.wrapper}>
@@ -120,16 +107,21 @@ const Search: React.FC<SearchProps> = ({
             }
             dropdownClassName={dropdownMenuClass}
           >
-            {regionOptions.map((option) => (
-              <button
-                key={option}
-                type="button"
-                className={optionBtnClass}
-                onClick={() => setRegion(option)}
-              >
-                {option}
-              </button>
-            ))}
+            {(close) =>
+              regionOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={optionBtnClass}
+                  onClick={() => {
+                    setRegion(option);
+                    close();
+                  }}
+                >
+                  {option}
+                </button>
+              ))
+            }
           </Dropdown>
           {region && (
             <button
@@ -154,16 +146,21 @@ const Search: React.FC<SearchProps> = ({
             }
             dropdownClassName={dropdownMenuClass}
           >
-            {categoryOptions.map((option) => (
-              <button
-                key={option}
-                type="button"
-                className={optionBtnClass}
-                onClick={() => setCategory(option)}
-              >
-                {option}
-              </button>
-            ))}
+            {(close) =>
+              categoryOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={optionBtnClass}
+                  onClick={() => {
+                    setCategory(option);
+                    close();
+                  }}
+                >
+                  {option}
+                </button>
+              ))
+            }
           </Dropdown>
           {category && (
             <button

@@ -13,7 +13,7 @@ const MyActivitiesCard = ({ activity }: MyActivitiesCardProps) => {
 
   const handleDelete = () => {
     setActivityId(activity.id);
-    openModal();
+    openModal('delete');
   };
 
   const hadnleEdit = () => {

@@ -17,10 +17,6 @@ import {
   TimeSlot,
 } from '@/features/activityId/libs/types/availableSchedule';
 import { ReservationRequestBody } from '@/features/activityId/libs/types/reservationType';
-import {
-  addReservation,
-  getMyResertvation,
-} from '@/features/activityId/libs/utils/addReservation';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { useCalendarStore } from '@/shared/components/calendar/libs/stores/useCalendarStore';
 import { formatDateToYMD } from '@/shared/components/calendar/libs/utils/formatDateToYMD';
@@ -37,7 +33,7 @@ const ReservationForm = ({
   price: number | undefined;
   activityId: number;
 }) => {
-  const { mutate } = useReservationMutation();
+  const { mutate } = useReservationMutation(activityId);
   const { selectedDate, year, month } = useCalendarStore();
   const { appear, openModal, modalName } = useModalStore();
   const { isDesktop, isTablet, isMobile } = useWindowSize();
@@ -93,7 +89,6 @@ const ReservationForm = ({
       { activityId, body: data }, // data: { scheduleId, headCount }
       {
         onSuccess: () => {
-          addReservation(data.scheduleId); // save id in localStorage
           setSelectedTime('');
           reset(); // 제출 후 폼 초기화
           submittingRef.current = false;
@@ -228,15 +223,12 @@ const ReservationForm = ({
                       <div className="flex flex-col gap-[1.2rem]">
                         {schedulesInDate?.map((schedule) => {
                           const isSelected = field.value === schedule?.id;
-                          const didIBooked = getMyResertvation().find(
-                            (id) => id === schedule?.id,
-                          );
+
                           return (
                             <div key={schedule?.id}>
                               <button
                                 type="button"
                                 onClick={() => {
-                                  if (didIBooked) return;
                                   field.onChange(
                                     isSelected ? '' : schedule?.id,
                                   );
@@ -247,21 +239,16 @@ const ReservationForm = ({
                                   } else setSelectedTime('');
                                 }}
                                 className={cn(
-                                  'flex-center border-sub w-full cursor-pointer rounded-[1.2rem] border-2 py-[1.4rem] text-[1.4rem] text-gray-950',
-                                  didIBooked
-                                    ? 'cursor-auto bg-gray-50 text-gray-600'
-                                    : isSelected
-                                      ? 'text-main border-sub-300 bg-sub-50 hover:text-main-600 hover:bg-sub trans-colors-200 font-semibold'
-                                      : 'btn-action-white',
+                                  'flex-center border-sub w-full cursor-pointer rounded-[1.2rem] border-2 py-[1.4rem] text-[1.4rem] font-medium text-gray-900',
+
+                                  isSelected
+                                    ? 'text-main border-sub-300 bg-sub-50 hover:text-main-600 hover:bg-sub trans-colors-200 font-medium'
+                                    : 'btn-action-white',
                                 )}
                               >
-                                {didIBooked ? (
-                                  '내가 예약한 체험'
-                                ) : (
-                                  <>
-                                    {schedule?.startTime} ~ {schedule?.endTime}
-                                  </>
-                                )}
+                                <>
+                                  {schedule?.startTime} ~ {schedule?.endTime}
+                                </>
                               </button>
                             </div>
                           );

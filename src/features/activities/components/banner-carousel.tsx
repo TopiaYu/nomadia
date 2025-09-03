@@ -11,7 +11,8 @@ import { Autoplay, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { navigateToActivity } from '@/features/activities/libs/utils/navigation';
-import { ErrorMessage, LoadingSpinner } from '@/shared/components';
+import { ErrorMessage } from '@/shared/components';
+import { BannerSkeleton } from '@/shared/components/skeleton/skeleton';
 import useActivityQuery from '@/shared/libs/hooks/useActivityQuery';
 
 /**
@@ -37,11 +38,14 @@ const BannerCarousel = () => {
   const handleSlideChange = (swiper: SwiperType) => {
     const currentIndex = swiper.realIndex;
 
-    // 중복 호출 방지 및 near-end 조건 확인
+    // 초기 로딩이 완료되고 최소 1개 이상의 배너가 있을 때만 prefetch 실행
     if (
+      !isLoading && // 초기 로딩이 완료된 상태
+      banners.length > 0 && // 최소 1개 이상의 배너가 있는 상태
       hasNextPage &&
-      currentIndex >= banners.length - 2 &&
-      !isFetchingRef.current
+      currentIndex >= banners.length - 1 &&
+      !isFetchingRef.current &&
+      banners.length < 8 // 최대 8개까지만 로드 (2페이지)
     ) {
       isFetchingRef.current = true; // 뮤텍스 잠금
 
@@ -83,9 +87,7 @@ const BannerCarousel = () => {
       >
         {isLoading ? (
           <SwiperSlide>
-            <div className="flex h-[18.1rem] items-center justify-center md:h-[37.5rem] lg:h-[50rem]">
-              <LoadingSpinner />
-            </div>
+            <BannerSkeleton />
           </SwiperSlide>
         ) : isError ? (
           <SwiperSlide>

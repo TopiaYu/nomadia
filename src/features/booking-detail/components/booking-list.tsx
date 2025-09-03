@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { ErrorMessage } from '@/shared/components/error-message/error-message';
-import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
+import { BookingCardSkeleton } from '@/shared/components/skeleton/skeleton';
 import { sortDatesAscending } from '@/shared/libs/utils/parseDate';
 
 import { useBookingQuery } from '../libs/hooks/useBookingQuery';
@@ -79,9 +79,7 @@ const BookingList = () => {
       <FilterButtons active={activeStatus} onChange={setActiveStatus} />
       <div className="flex flex-col gap-[2rem]">
         {isLoading ? (
-          <div className="flex-center h-[16rem]">
-            <LoadingSpinner />
-          </div>
+          <BookingCardSkeleton />
         ) : isError ? (
           <ErrorMessage />
         ) : filteredBookings.length === 0 ? (

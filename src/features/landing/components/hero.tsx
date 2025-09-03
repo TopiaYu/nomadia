@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { ErrorMessage } from '@/shared/components/error-message/error-message';
-import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
+import { HeroSkeletonGrid } from '@/shared/components/skeleton/skeleton';
 import useActivityQuery from '@/shared/libs/hooks/useActivityQuery';
 import type { Activity } from '@/shared/types/activity';
 
@@ -110,9 +110,9 @@ const Hero = ({ swiperRef, ActivityCard, router }: HeroProps) => {
               </button>
             </div>
           </div>
-          <div className="flex min-h-[28rem] items-center justify-center overflow-hidden px-[1.6rem]">
+          <div className="overflow-hidden px-0">
             {isLoading ? (
-              <LoadingSpinner />
+              <HeroSkeletonGrid />
             ) : isError ? (
               <ErrorMessage />
             ) : (

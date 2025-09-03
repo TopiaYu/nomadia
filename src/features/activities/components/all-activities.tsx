@@ -8,8 +8,8 @@ import { ActivityCard } from '@/features/activities/components/activity-card';
 import useResActivitiesQuery from '@/features/activities/libs/hooks/useResActivitiesQuery';
 import Dropdown from '@/shared/components/dropdown/dropdown';
 import { ErrorMessage } from '@/shared/components/error-message/error-message';
-import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
 import Pagination from '@/shared/components/pagination/pagination';
+import { AllActivitiesSkeletonGrid } from '@/shared/components/skeleton/skeleton';
 import { Button } from '@/shared/libs/shadcn/components/ui/button';
 
 import {
@@ -84,23 +84,28 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
           }
           dropdownClassName="absolute right-0"
         >
-          <div className="border-sub-300 txt-14-medium h-[12.3rem] w-[9.6rem] overflow-hidden rounded-xl border-[0.1rem] bg-white">
-            {SORT_OPTIONS.map(({ label, value }) => (
-              <button
-                key={value}
-                onClick={() =>
-                  handleSortChange(
-                    value as 'latest' | 'price_asc' | 'price_desc',
-                  )
-                }
-                className={`txt-14-medium h-[4.1rem] w-full cursor-pointer px-[1rem] py-[0.6rem] hover:bg-blue-50 ${
-                  selectedSort === value ? 'text-main font-bold' : 'text-black'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          {(close) => (
+            <div className="border-sub-300 txt-14-medium h-[12.3rem] w-[9.6rem] overflow-hidden rounded-xl border-[0.1rem] bg-white">
+              {SORT_OPTIONS.map(({ label, value }) => (
+                <button
+                  key={value}
+                  onClick={() => {
+                    handleSortChange(
+                      value as 'latest' | 'price_asc' | 'price_desc',
+                    );
+                    close();
+                  }}
+                  className={`txt-14-medium h-[4.1rem] w-full cursor-pointer px-[1rem] py-[0.6rem] hover:bg-blue-50 ${
+                    selectedSort === value
+                      ? 'text-main font-bold'
+                      : 'text-black'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
         </Dropdown>
       </div>
 
@@ -126,23 +131,21 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
       </div>
 
       <div>
-        <div className="grid min-h-[24.3rem] grid-cols-2 items-center justify-center gap-x-[1.8rem] gap-y-[2.4rem] md:gap-x-6 md:gap-y-[2.4rem] lg:grid-cols-4 lg:gap-x-[3rem] lg:gap-y-[2.4rem]">
-          {isLoading ? (
-            <div className="col-span-2 flex h-[16rem] items-center justify-center lg:col-span-4">
-              <LoadingSpinner />
-            </div>
-          ) : isError ? (
-            <ErrorMessage className="col-span-2 lg:col-span-4" />
-          ) : (
-            activities.map((activity, index) => (
+        {isLoading ? (
+          <AllActivitiesSkeletonGrid />
+        ) : isError ? (
+          <ErrorMessage message="체험을 불러오는 중 오류가 발생했습니다." />
+        ) : (
+          <div className="grid grid-cols-2 gap-x-[1.8rem] gap-y-[2.4rem] md:gap-x-6 md:gap-y-[2.4rem] lg:grid-cols-4 lg:gap-x-[3rem] lg:gap-y-[2.4rem]">
+            {activities.map((activity, index) => (
               <ActivityCard
                 key={activity.id}
                 activity={activity}
                 isPriority={index < 2}
               />
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
       <Pagination
         totalPages={totalPages}

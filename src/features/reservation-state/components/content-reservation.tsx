@@ -11,6 +11,7 @@ export type DisplayReservation = {
   status: 'pending' | 'confirmed' | 'declined';
   startTime: string;
   endTime: string;
+  date: string;
 };
 
 interface ContentReservationProps {
@@ -65,15 +66,21 @@ export const ContentReservation: React.FC<ContentReservationProps> = ({
                   'pending',
                 startTime: r.startTime,
                 endTime: r.endTime,
+                date: r.date,
               })),
             ),
         );
-        setReservations(allReservations);
 
-        // 모든 시간대 목록
+        const onlySelectedDate = allReservations.filter(
+          (r) => r.date.split('T')[0] === selectedDate,
+        );
+
+        setReservations(onlySelectedDate);
+
+        // 시간 슬롯 리스트 생성
         const slots = [
           ...new Set(
-            allReservations.map((r) => `${r.startTime} - ${r.endTime}`),
+            onlySelectedDate.map((r) => `${r.startTime} - ${r.endTime}`),
           ),
         ];
         setSelectedTimeSlot((prev) => prev ?? slots[0] ?? null);
@@ -194,16 +201,16 @@ export const ContentReservation: React.FC<ContentReservationProps> = ({
       </div>
 
       <div className="mb-6">
-        <div className="txt-14-bold mb-1 block">예약 시간</div>
+        <div className="txt-14-bold mb-1">예약 시간</div>
         <div className="relative">
           <select
             className="txt-14-medium h-[4.4rem] w-full appearance-none rounded-2xl border p-4 pr-10"
             value={selectedTimeSlot ?? ''}
             onChange={(e) => setSelectedTimeSlot(e.target.value || null)}
           >
-            {timeSlots.map((timeSlot) => (
-              <option key={timeSlot} value={timeSlot}>
-                {timeSlot}
+            {timeSlots.map((slot) => (
+              <option key={slot} value={slot}>
+                {slot}
               </option>
             ))}
           </select>

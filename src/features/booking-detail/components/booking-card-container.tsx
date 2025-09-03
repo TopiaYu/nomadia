@@ -39,13 +39,13 @@ const BookingCardContainer = ({
   const handleCancelClick = () => {
     setReservationId(reservation.id);
     setScheduleId(reservation.scheduleId);
-    openModal();
+    openModal('delete-review-modal');
   };
 
   // 후기 작성 버튼 클릭 시 모달 열기
   const handleReviewClick = () => {
     setReservationId(reservation.id);
-    openModal();
+    openModal('delete-review-modal');
   };
 
   return (

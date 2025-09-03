@@ -36,6 +36,15 @@ const BookingCardActions = ({
 
   // 체험 완료 상태일 때 후기 작성 관련 버튼 표시
   if (reservation.status === 'completed') {
+    // 삭제된 체험의 경우 리뷰 작성 버튼을 표시하지 않음
+    if (!reservation.activity || !reservation.activity.title) {
+      return (
+        <div className="flex-center w-full gap-[0.4rem] rounded-[0.8rem] bg-gray-50 p-[1rem] text-[1.4rem] font-medium text-gray-600">
+          삭제된 체험
+        </div>
+      );
+    }
+
     if (!reservation.reviewSubmitted) {
       return (
         <button

@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 
 import OwnerDropdown from '@/features/activityId/components/owner-drop-down';
 import { textStyle } from '@/features/activityId/libs/constants/variants';
@@ -7,8 +6,13 @@ import StarImage from '@/shared/components/star/star';
 
 import { ActivityInfo } from '../libs/types/activityInfo';
 
-const Header = ({ data }: { data: ActivityInfo | undefined }) => {
-  const { id } = useParams();
+const Header = ({
+  data,
+  id,
+}: {
+  data: ActivityInfo | undefined;
+  id: string;
+}) => {
   return (
     <header>
       {/* 카테고리, 제목, 드롭다운 */}

@@ -5,7 +5,6 @@ import {
   defaultCellStyle,
   selectedCircle,
 } from '@/shared/components/calendar/libs/constants/calendarStyles';
-import { MONTH_NAME } from '@/shared/components/calendar/libs/constants/constants';
 import { useCalendarStore } from '@/shared/components/calendar/libs/stores/useCalendarStore';
 import { formatDateToYMD } from '@/shared/components/calendar/libs/utils/formatDateToYMD';
 import { getMonthRange } from '@/shared/components/calendar/libs/utils/getMonthRange';
@@ -28,7 +27,6 @@ import { cn } from '@/shared/libs/cn';
  *
  * @example
  * <CalendarForForm
- *   setSelectedId={setScheduleId}
  *   scheduleArray={data}
  *   calendarWidth="md:w-[38rem] lg:w-[40rem]..."
  *   dayOfWeekStyle="text-gray-500 md:w-[2rem]..."
@@ -74,12 +72,13 @@ const CalendarForForm = ({
       {/* year, month */}
       <div
         className={cn(
-          'flex w-full items-center justify-between bg-white text-[1.6rem] font-medium text-gray-950',
+          'mb-[0.4rem] flex w-full items-center justify-between bg-white',
         )}
       >
-        <div className={cn('mb-[0.8rem] flex gap-[0.2rem]')}>
-          <div>{MONTH_NAME[month]}</div>
-          <div>{year}</div>
+        <div className="flex gap-[0.2rem] pl-[1rem] text-[1.8rem] font-medium text-gray-950">
+          <div>
+            {year}년 {month + 1}월
+          </div>
         </div>
         <div className="flex gap-[1.2rem]">
           <ArrowButton type="left" />

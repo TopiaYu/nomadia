@@ -18,7 +18,7 @@ export const usePostReviewMutation = () => {
 
   return useMutation({
     mutationFn: (params: PostReviewParams) => postReview(params),
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
       // 리뷰 작성 성공 시 해당 예약의 reviewSubmitted 상태를 즉시 업데이트
       queryClient.setQueryData(
         ['booking'],
@@ -38,6 +38,7 @@ export const usePostReviewMutation = () => {
 
       // 추가로 전체 booking 쿼리도 무효화하여 서버와 동기화
       queryClient.invalidateQueries({ queryKey: ['booking'] });
+      queryClient.invalidateQueries({ queryKey: ['reviews', data.activityId] });
       toast.success('리뷰가 성공적으로 작성되었습니다.');
     },
     onError: (error) => {

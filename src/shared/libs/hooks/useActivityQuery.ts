@@ -29,9 +29,14 @@ const useActivityQuery = (params: GetActListApiParams) => {
       return currentTotal < totalCount ? allPages.length + 1 : undefined;
     },
     initialPageParam: 1,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 15,
+    gcTime: 1000 * 60 * 30,
     retry: 1,
     refetchOnWindowFocus: false,
+    // 마운트 시 재요청 방지
+    refetchOnMount: false,
+    // 네트워크 재연결 시 재요청 방지
+    refetchOnReconnect: false,
   });
 };
 

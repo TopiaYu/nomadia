@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import NotificationButton from '@/features/activities/components/notification-button';
+import { useSearchStore } from '@/features/activities/libs/stores/searchStore';
 import { useSavePathActivityId } from '@/features/activityId/libs/hooks/useSavePathActivityId';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { useRedirectAfterSuccess } from '@/features/auth/utils/hooks/useRedirectAfterSuccess';
@@ -27,8 +28,9 @@ const Header = () => {
   const redirectAfterLogout = useRedirectAfterSuccess();
   const savePathActivityId = useSavePathActivityId();
   const { openModal, closeModal, modalName } = useModalStore();
+  const resetSearch = useSearchStore((state) => state.reset);
 
-  if (!hydrated) return null;
+  if (!hydrated) return <div className="h-[4.8rem] md:h-[6rem]"></div>;
 
   const handleLogoutConfirm = () => {
     queryClient.clear();
@@ -42,7 +44,15 @@ const Header = () => {
     <>
       <nav className="bg-sub mx-auto flex h-[4.8rem] w-full items-center justify-between px-[2.4rem] py-[0.6rem] md:h-[6rem] md:px-[3rem] md:py-[1rem] lg:px-[20rem]">
         <div className="text-main txt-20-bold cursor-pointer md:flex md:gap-3">
-          <Link href="/activities" className="flex items-center gap-3">
+          <Link
+            href="/activities"
+            className="flex items-center gap-3"
+            onClick={(e) => {
+              e.preventDefault();
+              resetSearch();
+              router.push('/activities');
+            }}
+          >
             <Image
               src="/images/icons/logo.svg"
               alt="Logo"
@@ -119,6 +129,7 @@ const Header = () => {
               {/* 비로그인 상태일 때 */}
               <li>
                 <button
+                  className="cursor-pointer"
                   onClick={() => {
                     savePathActivityId();
                     router.push('/login');
@@ -129,6 +140,7 @@ const Header = () => {
               </li>
               <li>
                 <button
+                  className="cursor-pointer"
                   onClick={() => {
                     savePathActivityId();
                     router.push('/signup');

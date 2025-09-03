@@ -107,7 +107,7 @@ const ActivityEditForm = ({ activityId }: ActivityEditFormProps) => {
           router.push('/my/my-activities');
         }
       } catch {
-        toast.error('오류기 발생했습니다.');
+        toast.error('오류가 발생했습니다.');
         console.error('오류 발생'); // 디버깅용
       }
     };

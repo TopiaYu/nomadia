@@ -22,16 +22,16 @@ import { ActivityRegistrationParams } from '@/shared/types/activity';
 const registerSchema = z.object({
   title: z.string().min(1, { message: '제목을 입력해 주세요.' }),
   category: z.string().min(1, { message: '카테고리를 선택해 주세요.' }),
-  address: z.string().min(1, { message: '주소를 입력해주세요.' }),
   description: z.string().min(1, { message: '설명을 입력해 주세요.' }),
   price: z
-    .number()
+    .number({ message: '금액을 입력해 주세요.' })
     .min(FORM_CONSTRAINTS.PRICE.MIN, {
       message: `최소 ${FORM_CONSTRAINTS.PRICE.MIN}원 이상 입력해 주세요.`,
     })
     .max(FORM_CONSTRAINTS.PRICE.MAX, {
       message: `최대 ${FORM_CONSTRAINTS.PRICE.MAX.toLocaleString()}원 이하 입력해 주세요.`,
     }),
+  address: z.string().min(1, { message: '주소를 입력해 주세요.' }),
   schedules: z
     .array(
       z.object({

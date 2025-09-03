@@ -11,7 +11,7 @@ interface ReservationVariables {
   body: ReservationRequestBody;
 }
 
-export const useReservationMutation = () => {
+export const useReservationMutation = (activityId: number) => {
   const queryClient = useQueryClient();
   const { openModal } = useModalStore();
   const { resetSelectedDate, resetDate } = useCalendarStore();
@@ -22,6 +22,9 @@ export const useReservationMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['booking'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['reservationsByActivity', activityId],
       });
       openModal('success');
       resetSelectedDate();
