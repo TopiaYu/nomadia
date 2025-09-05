@@ -142,7 +142,7 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
               onClick={() => handleCategoryChange(name)}
             >
               <Icon
-                className={`size-[1.7rem] ${active === name ? 'text-white' : 'text-gray-950'}`}
+                className={`size-[1.7rem] ${active === name ? 'text-white' : 'group-hover:text-main text-gray-950'} `}
               />
               {name}
             </Button>

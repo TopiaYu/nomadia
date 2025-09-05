@@ -72,7 +72,7 @@ const Search: React.FC<SearchProps> = ({
   const style = searchVariant.main;
 
   const dropdownBtnClass =
-    'flex w-[20rem] items-center justify-between rounded txt-14-medium text-gray-700 bg-transparent hover:bg-gray-50 cursor-pointer';
+    'flex lg:w-[20rem] md:w-[6rem] items-center justify-between rounded txt-14-medium text-gray-700 bg-transparent hover:bg-gray-50 cursor-pointer';
 
   const dropdownMenuClass =
     'mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-100 p-2 space-y-2 txt-14-medium';
@@ -83,7 +83,7 @@ const Search: React.FC<SearchProps> = ({
   return (
     <div className={style.wrapper}>
       <p className={style.title}>무엇을 체험하고 싶으신가요?</p>
-      <div className={style.inputBox}>
+      <div className={style.inputBox + 'flex gap-2'}>
         <input
           type="text"
           value={keyword}
@@ -92,94 +92,179 @@ const Search: React.FC<SearchProps> = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={isFocused ? '' : placeholder}
-          className={style.input}
+          className={` ${style.input} `}
         />
 
-        <div className="mx-5 h-12 border-r border-gray-300"></div>
+        <div className="mr-5 h-12 border-r border-gray-300"></div>
 
-        {/* 지역 */}
-        <div className="flex items-center gap-2">
-          <Dropdown
-            trigger={
-              <button type="button" className={dropdownBtnClass}>
-                <span>{region || '지역'}</span>
-              </button>
-            }
-            dropdownClassName={dropdownMenuClass}
-          >
-            {(close) =>
-              regionOptions.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  className={optionBtnClass}
-                  onClick={() => {
-                    setRegion(option);
-                    close();
-                  }}
-                >
-                  {option}
+        {/* PC/Tablet 전용 */}
+        <div className="hidden gap-4 md:flex">
+          {/* 지역 */}
+          <div className="flex min-w-[8rem] items-center">
+            <Dropdown
+              trigger={
+                <button type="button" className={dropdownBtnClass}>
+                  <span>{region || '지역'}</span>
                 </button>
-              ))
-            }
-          </Dropdown>
-          {region && (
-            <button
-              type="button"
-              onClick={() => setRegion('')}
-              className="text-gray-400 hover:text-gray-600"
+              }
+              dropdownClassName={dropdownMenuClass}
             >
-              <X className="size-6" />
-            </button>
-          )}
+              {(close) =>
+                regionOptions.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    className={optionBtnClass}
+                    onClick={() => {
+                      setRegion(option);
+                      close();
+                    }}
+                  >
+                    {option}
+                  </button>
+                ))
+              }
+            </Dropdown>
+            {region && (
+              <button
+                type="button"
+                onClick={() => setRegion('')}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="size-6" />
+              </button>
+            )}
+          </div>
+
+          <div className="mr-5 h-12 border-r border-gray-300"></div>
+
+          {/* 카테고리 */}
+          <div className="flex min-w-[8rem] items-center">
+            <Dropdown
+              trigger={
+                <button type="button" className={dropdownBtnClass}>
+                  <span>{category || '카테고리'}</span>
+                </button>
+              }
+              dropdownClassName={dropdownMenuClass}
+            >
+              {(close) =>
+                categoryOptions.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    className={optionBtnClass}
+                    onClick={() => {
+                      setCategory(option);
+                      close();
+                    }}
+                  >
+                    {option}
+                  </button>
+                ))
+              }
+            </Dropdown>
+            {category && (
+              <button
+                type="button"
+                onClick={() => setCategory('')}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="size-6" />
+              </button>
+            )}
+          </div>
+
+          <div className="h-12 border-r border-gray-300"></div>
         </div>
 
-        <div className="mx-5 h-12 border-r border-gray-300"></div>
-
-        {/* 카테고리 */}
-        <div className="flex items-center gap-2">
+        {/* Mobile 전용 */}
+        <div className="flex md:hidden">
           <Dropdown
             trigger={
-              <button type="button" className={dropdownBtnClass}>
-                <span>{category || '카테고리'}</span>
+              <button
+                className={`${dropdownBtnClass} flex max-w-[20rem] items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap`}
+              >
+                {/* 지역 */}
+                <span className="flex items-center gap-1">
+                  {region || '지역'}
+                  {region && (
+                    <X
+                      className="size-4 text-gray-400 hover:text-gray-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setRegion('');
+                      }}
+                    />
+                  )}
+                </span>
+                <span>/</span>
+                {/* 카테고리 */}
+                <span className="flex items-center gap-1">
+                  {category || '카테고리'}
+                  {category && (
+                    <X
+                      className="size-4 text-gray-400 hover:text-gray-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCategory('');
+                      }}
+                    />
+                  )}
+                </span>
               </button>
             }
-            dropdownClassName={dropdownMenuClass}
+            dropdownClassName="fixed top-[38rem] right-[4rem] mt-2 w-[30rem] bg-white rounded-xl shadow-lg border border-gray-100 p-4 grid grid-cols-2 gap-4 txt-14-medium"
           >
-            {(close) =>
-              categoryOptions.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  className={optionBtnClass}
-                  onClick={() => {
-                    setCategory(option);
-                    close();
-                  }}
-                >
-                  {option}
-                </button>
-              ))
-            }
-          </Dropdown>
-          {category && (
-            <button
-              type="button"
-              onClick={() => setCategory('')}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              <X className="size-6" />
-            </button>
-          )}
-        </div>
+            {(close) => (
+              <>
+                <div>
+                  <p className="txt-14-medium px-1 py-2 text-gray-600">지역</p>
+                  <div className="flex flex-col space-y-1">
+                    {regionOptions.map((option) => (
+                      <button
+                        key={option}
+                        className={optionBtnClass}
+                        onClick={() => {
+                          setRegion(option);
+                          close();
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-        <div className="mx-5 h-12 border-r border-gray-300"></div>
+                <div>
+                  <p className="txt-14-medium px-1 py-2 text-gray-600">
+                    카테고리
+                  </p>
+                  <div className="flex flex-col space-y-1">
+                    {categoryOptions.map((option) => (
+                      <button
+                        key={option}
+                        className={optionBtnClass}
+                        onClick={() => {
+                          setCategory(option);
+                          close();
+                        }}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </Dropdown>
+        </div>
 
         <Button
           color="blue"
           ariaLabel="검색하기"
           onClick={handleSearch}
-          extraClassName={`${style.button} mx-7 flex items-center justify-center !w-[5rem] !h-[5rem] rounded-full`}
+          extraClassName={`${style.button} mx-7 flex items-center justify-center !w-[3rem] !h-[3rem] md:!w-[5rem] md:!h-[5rem] rounded-full`}
         >
           <SearchIcon className="h-8 w-8" />
         </Button>

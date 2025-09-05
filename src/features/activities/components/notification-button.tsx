@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
+import NotificationModal from '@/features/activities/components/notification-modal';
 import { useNotifications } from '@/features/activities/libs/hooks/useNotifications';
-import NotificationModal from '@/shared/components/modal/components/notification-modal';
 import { useNotificationStore } from '@/shared/libs/stores/useNotificationStore';
 
 const NotificationButton = () => {
