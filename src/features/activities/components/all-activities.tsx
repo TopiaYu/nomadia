@@ -2,7 +2,8 @@
 
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { ActivityCard } from '@/features/activities/components/activity-card';
 import useResActivitiesQuery from '@/features/activities/libs/hooks/useResActivitiesQuery';
@@ -62,6 +63,25 @@ const AllActivities = ({ keyword }: AllActivitiesProps) => {
     setSelectedSort(value);
     setPage(1);
   };
+
+  // 첫마운트 시 - 파라미터 반영하여 페이지 상태값 재설정
+  const pageParams = useSearchParams().get('page');
+  useEffect(() => {
+    if (pageParams) {
+      setPage(Number(pageParams)); // * 값이 이전과 동일하면 리렌더X
+    }
+  }, [pageParams]);
+
+  // page 변경 시, page 파라미터 수정 (* URL변경, 리렌더 트리거X)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('page', String(page));
+    window.history.replaceState(
+      {},
+      '',
+      `${window.location.pathname}?${params.toString()}`,
+    );
+  }, [page]);
 
   return (
     <div className="px-[2.4rem] md:px-[3rem] lg:px-[4rem]">

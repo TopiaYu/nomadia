@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { ChevronDown } from 'lucide-react';
-import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { getActListApi } from '@/features/activities/libs/api/getActListApi';
@@ -18,6 +17,8 @@ import { MonthReservations } from '@/shared/components/calendar/libs/types/data'
 import Dropdown from '@/shared/components/dropdown/dropdown';
 import AdaptiveModal from '@/shared/components/modal/components/adaptive-modal/adaptive-modal';
 import { useModalStore } from '@/shared/components/modal/libs/stores/useModalStore';
+import NoData from '@/shared/components/no-data/no-data';
+import { cn } from '@/shared/libs/cn';
 import useWindowSize from '@/shared/libs/hooks/useWindowSize';
 import { Activity } from '@/shared/types/activity';
 
@@ -199,13 +200,12 @@ const ReserveCalendarPage = () => {
   }, [selectedDate, reservationArray]);
 
   return (
-    <div className="flex flex-col items-start py-[1rem]">
+    <div className="flex flex-col py-[1rem]">
       <div className="mb-[2.4rem] w-full">
-        <h2 className="txt-18-bold text-gray-950">예약 현황</h2>
+        <h1 className="txt-18-bold mb-[0.4rem] text-gray-950">예약 현황</h1>
         <p className="txt-14-medium mt-1 text-gray-500">
           내 체험의 내역들을 한 눈에 확인할 수 있습니다.
         </p>
-
         <div className="mt-[1.8rem] md:w-[47.6rem] lg:w-[63.6rem]">
           <Dropdown
             trigger={
@@ -224,7 +224,7 @@ const ReserveCalendarPage = () => {
                 <ChevronDown className="mr-[2rem] size-[2rem]" />
               </div>
             }
-            dropdownClassName="w-full bg-white shadow-experience-card rounded-[1rem] border border-gray-100 px-[2.6rem]"
+            dropdownClassName="mt-2 w-full bg-white rounded-xl shadow-experience-card rounded-[1rem] border border-gray-100 px-[2.6rem]"
           >
             {(close) => (
               <ul className="py-3">
@@ -232,7 +232,7 @@ const ReserveCalendarPage = () => {
                 {activities.map((act) => (
                   <button
                     key={act.id}
-                    className="txt-13-medium block w-full cursor-pointer py-2 text-left hover:bg-gray-50"
+                    className="txt-13-medium hover:bg-sub w-full cursor-pointer rounded-lg bg-white py-2 text-left transition-all duration-200"
                     onClick={() => {
                       handleSelectActivity(act.id, act.title);
                       close();
@@ -246,52 +246,53 @@ const ReserveCalendarPage = () => {
           </Dropdown>
         </div>
       </div>
-
-      <div className="flex gap-8">
-        <div className="md:w-[47.6rem] lg:w-[63.6rem]">
-          {selectedActivityId ? (
-            <CalendarWithReservations
-              reservationArray={reservationArray}
-              calendarWidth="w-full md:rounded-[2rem] border border-gray-50 shadow-experience-card"
-              dayOfWeekStyle="w-[5.35rem] md:w-[6.8rem] lg:w-[9.143rem]"
-              onCellClick={handleDateClick}
-              calendarRef={calendarRef}
+      <div className="md:w-[47.6rem] lg:w-[63.6rem]">
+        {selectedActivityId ? (
+          <CalendarWithReservations
+            reservationArray={reservationArray}
+            calendarWidth="w-full md:rounded-[2rem] border border-gray-50 shadow-experience-card"
+            dayOfWeekStyle="w-[5.35rem] md:w-[6.8rem] lg:w-[9.143rem]"
+            onCellClick={handleDateClick}
+            calendarRef={calendarRef}
+          >
+            {/* 모달 투명 오버레이 - 모달 바깥 클릭 -> closeModal */}
+            {isDesktop && selectedDate && (
+              <div
+                className="fixed inset-0 z-80"
+                onClick={() => {
+                  resetSelectedDate();
+                  resetDate();
+                }}
+                role="presentation"
+              ></div>
+            )}
+            {/* 모달 위치 제어하기 위한 div 태그 */}
+            <div
+              style={modalPosition}
+              className={cn(isDesktop && selectedDate && 'z-90')}
             >
-              {/* 모달 위치 제어하기 위한 div 태그 */}
-              <div style={modalPosition}>
-                {/* 예약 현황 모달 */}
-                <AdaptiveModal extraClassName="shadow-experience-card category-scroll h-[50.8rem] overflow-scroll border border-gray-50 md:h-[39.7rem] lg:h-[44.4rem] lg:w-[32.3rem]">
-                  <div className="p-4">
-                    {selectedReservationsOfDate.length > 0 ? (
-                      <ContentReservation
-                        teamId="15-6"
-                        activityId={Number(selectedActivityId)}
-                        scheduleId={selectedScheduleId}
-                        status={'pending'}
-                        selectedDate={selectedDate || ''}
-                        onStatusChange={updateReservationStatus}
-                      />
-                    ) : (
-                      <EmptyReservation />
-                    )}
-                  </div>
-                </AdaptiveModal>
-              </div>
-            </CalendarWithReservations>
-          ) : (
-            <div className="mt-24 flex flex-col items-center justify-center">
-              <Image
-                src="/images/sad-laptop.svg"
-                alt="Sad laptop"
-                width={246}
-                height={200}
-              />
-              <p className="mt-14 text-[1.8rem] font-medium text-gray-600">
-                등록한 체험을 선택해주세요.
-              </p>
+              {/* 예약 현황 모달 */}
+              <AdaptiveModal extraClassName="shadow-experience-card category-scroll h-[50.8rem] overflow-scroll border border-gray-50 md:h-[39.7rem] lg:h-[44.4rem] lg:w-[32.3rem]">
+                <div className="p-4">
+                  {selectedReservationsOfDate.length > 0 ? (
+                    <ContentReservation
+                      teamId="15-6"
+                      activityId={Number(selectedActivityId)}
+                      scheduleId={selectedScheduleId}
+                      status={'pending'}
+                      selectedDate={selectedDate || ''}
+                      onStatusChange={updateReservationStatus}
+                    />
+                  ) : (
+                    <EmptyReservation />
+                  )}
+                </div>
+              </AdaptiveModal>
             </div>
-          )}
-        </div>
+          </CalendarWithReservations>
+        ) : (
+          <NoData message="등록한 체험을 선택해주세요." />
+        )}
       </div>
     </div>
   );

@@ -46,14 +46,10 @@ const ActivitiesPageContent = () => {
         ) : (
           <>
             {/* 지연 로드: 인기 체험 */}
-            <Suspense fallback={<LoadingSpinner />}>
-              <BestActivities />
-            </Suspense>
+            <BestActivities />
 
             {/* 지연 로드: 전체 체험 목록 */}
-            <Suspense fallback={<LoadingSpinner />}>
-              <AllActivities />
-            </Suspense>
+            <AllActivities />
           </>
         )}
       </div>

@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import Sidebar from '@/features/my/components/sidebar';
+import { AuthGuard } from '@/shared/components/auth/AuthGuard';
 import LoadingSpinner from '@/shared/components/loading-spinner/loading-spinner';
 import useWindowSize from '@/shared/libs/hooks/useWindowSize';
 
@@ -42,39 +43,41 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div
-      className={`mx-auto flex justify-center px-[2.4rem] py-[3rem] md:w-[73.2rem] md:gap-[3rem] lg:min-w-[102.4rem] lg:gap-[5rem]`}
-    >
-      {/* 모바일에서만 보이는 뒤로가기 버튼 */}
-      {isMobile && !isMyPageRoot && (
-        <button
-          onClick={handleBackClick}
-          className="absolute top-[5.8rem] left-[2.4rem]"
-          aria-label="뒤로 가기"
-        >
-          <Image
-            src="/images/icons/back.svg"
-            alt="뒤로 가기"
-            width={23}
-            height={23}
-          />
-        </button>
-      )}
-
-      <aside
-        className={
-          (isMobile && !isMyPageRoot) ||
-          isActivityRegistration ||
-          isActivityEdit
-            ? 'hidden'
-            : ''
-        }
+    <AuthGuard>
+      <div
+        className={`mx-auto flex justify-center px-[2.4rem] py-[3rem] md:w-[73.2rem] md:gap-[3rem] lg:min-w-[102.4rem] lg:gap-[5rem]`}
       >
-        <Sidebar />
-      </aside>
-      <main className={`${isMobile && isMyPageRoot ? 'hidden' : ''} w-full`}>
-        {children}
-      </main>
-    </div>
+        {/* 모바일에서만 보이는 뒤로가기 버튼 */}
+        {isMobile && !isMyPageRoot && (
+          <button
+            onClick={handleBackClick}
+            className="absolute top-[5.8rem] left-[2.4rem]"
+            aria-label="뒤로 가기"
+          >
+            <Image
+              src="/images/icons/back.svg"
+              alt="뒤로 가기"
+              width={23}
+              height={23}
+            />
+          </button>
+        )}
+
+        <aside
+          className={
+            (isMobile && !isMyPageRoot) ||
+            isActivityRegistration ||
+            isActivityEdit
+              ? 'hidden'
+              : ''
+          }
+        >
+          <Sidebar />
+        </aside>
+        <main className={`${isMobile && isMyPageRoot ? 'hidden' : ''} w-full`}>
+          {children}
+        </main>
+      </div>
+    </AuthGuard>
   );
 }

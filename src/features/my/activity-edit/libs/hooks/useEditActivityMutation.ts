@@ -28,9 +28,8 @@ export const useEditActivityMutation = () => {
       });
       router.push('/my/my-activities');
     },
-    onError: (error) => {
-      console.error('체험 수정 실패:', error);
-      toast.error('체험 수정에 실패했습니다. 다시 시도해주세요.');
+    onError: (_error) => {
+      alert('체험 수정에 실패했습니다. 다시 시도해주세요.');
     },
   });
 };

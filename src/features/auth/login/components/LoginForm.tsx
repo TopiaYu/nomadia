@@ -33,9 +33,8 @@ export const LoginForm = () => {
       storeLogin(response);
       toast.success('로그인 성공');
       redirectAfterLogin('/activities');
-    } catch (error) {
-      console.error('로그인 실패', error);
-      toast.error('로그인에 실패했습니다');
+    } catch {
+      alert('로그인에 실패했습니다');
     }
   };
 

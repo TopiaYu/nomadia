@@ -5,7 +5,6 @@ import { ParamValue } from 'next/dist/server/request/params';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import z from 'zod';
 
 import BannerImageUpload from '@/features/activity-registration/components/banner-image-upload';
@@ -103,11 +102,11 @@ const ActivityEditForm = ({ activityId }: ActivityEditFormProps) => {
             })),
           });
         } else {
-          toast.error('체험 정보를 불러오지 못했습니다.');
+          alert('체험 정보를 불러오지 못했습니다.');
           router.push('/my/my-activities');
         }
       } catch {
-        toast.error('오류가 발생했습니다.');
+        alert('오류가 발생했습니다.');
         console.error('오류 발생'); // 디버깅용
       }
     };
@@ -132,7 +131,7 @@ const ActivityEditForm = ({ activityId }: ActivityEditFormProps) => {
     }
 
     if (!initialActivityData) {
-      toast.error('기존 체험 데이터를 불러오지 못했습니다.');
+      alert('기존 체험 데이터를 불러오지 못했습니다.');
       return;
     }
 

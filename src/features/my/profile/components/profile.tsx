@@ -36,7 +36,7 @@ const Profile = () => {
   const [isloading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState(
-    '/images/icons/profile-default.png',
+    '/images/icons/profile-default.svg',
   );
   const isImageChanged = !!selectedImage;
   const { data: myData } = useMyProfile();
@@ -52,7 +52,7 @@ const Profile = () => {
           setPreviewUrl(userData.profileImageUrl);
         }
       } catch {
-        toast.error('사용자 정보를 가져오지 못했습니다.');
+        alert('사용자 정보를 가져오지 못했습니다.');
       } finally {
         setIsLoading(false);
       }
@@ -67,7 +67,7 @@ const Profile = () => {
     // 이전 preview URL 정리
     if (
       previewUrl &&
-      previewUrl !== '/images/icons/profile-default.png' &&
+      previewUrl !== '/images/icons/profile-default.svg' &&
       !previewUrl.startsWith('http')
     ) {
       URL.revokeObjectURL(previewUrl);
@@ -81,7 +81,7 @@ const Profile = () => {
     return () => {
       if (
         previewUrl &&
-        previewUrl !== '/images/icons/profile-default.png' &&
+        previewUrl !== '/images/icons/profile-default.svg' &&
         !previewUrl.startsWith('http')
       ) {
         URL.revokeObjectURL(previewUrl);
@@ -119,7 +119,7 @@ const Profile = () => {
           return;
         }
       }
-      toast.error('수정 실패');
+      alert('프로필 수정에 실패했습니다. 다시 시도해주세요.');
     },
   });
 

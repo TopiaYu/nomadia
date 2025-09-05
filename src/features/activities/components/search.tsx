@@ -75,10 +75,10 @@ const Search: React.FC<SearchProps> = ({
     'flex w-[20rem] items-center justify-between rounded txt-14-medium text-gray-700 bg-transparent hover:bg-gray-50 cursor-pointer';
 
   const dropdownMenuClass =
-    'mt-1 w-full bg-white rounded shadow-md txt-14-medium';
+    'mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-100 p-2 space-y-2 txt-14-medium';
 
   const optionBtnClass =
-    'w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-blue-50 cursor-pointer';
+    'w-full px-4 py-3 rounded-lg text-left txt-12-medium bg-white hover:bg-sub cursor-pointer transition-all duration-200';
 
   return (
     <div className={style.wrapper}>

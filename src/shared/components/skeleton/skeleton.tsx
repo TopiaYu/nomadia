@@ -108,13 +108,13 @@ export const AllActivitiesSkeletonGrid = () => {
 export const BookingCardSkeleton = () => {
   return (
     <div className="flex flex-col gap-[2rem]">
-      {Array.from({ length: 2 }, (_, index) => (
+      {Array.from({ length: 3 }, (_, index) => (
         <div
           key={`booking-card-skeleton-${index}`}
           className="flex flex-col gap-[1.2rem]"
         >
-          <div className="shadow-experience-card relative flex h-[13.6rem] w-full animate-pulse justify-between rounded-[2.4rem] bg-gray-200 md:h-[14rem] lg:h-[18.1rem]" />
-          <div className="shadow-experience-card flex-center h-[4.1rem] w-full animate-pulse rounded-[0.8rem] bg-gray-200 text-[1.4rem]" />
+          <div className="shadow-experience-card h-[2rem] w-1/3 animate-pulse rounded-[2.4rem] bg-gray-200 sm:w-1/2 md:h-[2.7rem] md:w-1/3" />
+          <div className="shadow-experience-card flex h-[13.6rem] w-full animate-pulse justify-between rounded-[2.4rem] bg-gray-200 sm:h-[14rem] md:h-[14rem] lg:h-[18.1rem]" />
         </div>
       ))}
     </div>
@@ -124,7 +124,13 @@ export const BookingCardSkeleton = () => {
 // 내 체험 관리 페이지 스켈레톤
 export const MyActivitiesSkeleton = () => {
   return (
-    <div className="shadow-experience-card h-[17.2rem] w-[32.7rem] animate-pulse rounded-[2.4rem] bg-gray-200 md:w-[47.6rem] lg:w-[63.6rem]" />
+    <div className="flex flex-col gap-[2.4rem]">
+      {Array.from({ length: 3 }, (_, index) => (
+        <div key={`my-activities-skeleton-${index}`}>
+          <div className="shadow-experience-card h-[17.2rem] w-full animate-pulse rounded-[2.4rem] bg-gray-200 lg:h-[20.2rem]" />
+        </div>
+      ))}
+    </div>
   );
 };
 
@@ -138,7 +144,7 @@ export const DetailSubImagesSkeleton = () => {
 // 상세 페이지 카카오 맵 스켈레톤
 export const DetailKakaoMapSkeleton = () => {
   return (
-    <div className="shadow-experience-card h-[18rem] w-[32.7rem] animate-pulse rounded-[1.6rem] bg-gray-200 md:h-[38rem] md:w-[68.8rem] lg:h-[45rem] lg:w-[66.1rem]" />
+    <div className="shadow-experience-card h-[18rem] w-full animate-pulse rounded-[1.6rem] bg-gray-200 md:h-[38rem] lg:h-[45rem]" />
   );
 };
 
@@ -147,11 +153,11 @@ export const DetailReviewsSkeleton = () => {
   return (
     <div className="animate-pulse">
       {/* 후기 리스트 */}
-      <ul className="space-y-[4rem]">
+      <ul className="mb-[11.5rem] space-y-[4rem] lg:mb-[21rem]">
         {Array.from({ length: 3 }, (_, index) => (
           <li key={`review-skeleton-${index}`}>
             <article
-              className={`shadow-experience-card h-[11rem] rounded-[2.4rem] bg-gray-200 p-[2rem] md:h-[11.3rem] ${index === 2 ? 'mb-[3rem]' : 'mb-[4rem]'}`}
+              className={`shadow-experience-card h-[11rem] rounded-[2.4rem] bg-gray-200 p-[2rem] md:h-[11.3rem]`}
             ></article>
           </li>
         ))}

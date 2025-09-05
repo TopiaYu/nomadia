@@ -180,7 +180,7 @@ const CalendarWithReservations = ({
                         </div>
 
                         {/* ✅ 빨간 점 표시 - 반응형 스타일 추가해주세요 */}
-                        <div className="absolute top-[0.9rem] left-[3.39rem] size-[0.4rem] rounded-full bg-red-500" />
+                        <div className="absolute top-[0.9rem] left-[3.39rem] size-[0.4rem] rounded-full bg-red-500 md:left-[3.89rem] lg:left-[5.19rem]" />
                       </div>
                     );
                   })}

@@ -2,8 +2,9 @@
 import { useState } from 'react';
 
 import { useReviewsQuery } from '@/features/activityId/libs/hooks/useReviewsQuery';
-import { ErrorMessage, LoadingSpinner } from '@/shared/components';
+import { ErrorMessage } from '@/shared/components';
 import Pagination from '@/shared/components/pagination/pagination';
+import { DetailReviewsSkeleton } from '@/shared/components/skeleton/skeleton';
 import StarImage from '@/shared/components/star/star';
 import { cn } from '@/shared/libs/cn';
 
@@ -17,12 +18,7 @@ const Reviews = ({ activityId }: { activityId: number }) => {
   });
   const isPageNecessary = data && data.totalCount > 0;
 
-  if (isLoading)
-    return (
-      <div className="shadow-experience-card mb-[1.6rem] h-[11rem] w-full md:h-[11.3rem]">
-        <LoadingSpinner />
-      </div>
-    );
+  if (isLoading) return <DetailReviewsSkeleton />;
   if (isError) return <ErrorMessage />;
   return (
     <>

@@ -9,7 +9,7 @@ import React from 'react';
 import { useMyProfile } from '@/features/my/profile/lib/hooks/useMyProfile';
 
 const Sidebar = () => {
-  const defaultProfileImage = '/images/icons/profile-default.png';
+  const defaultProfileImage = '/images/icons/profile-default.svg';
   const pathname = usePathname();
   const menus = [
     {

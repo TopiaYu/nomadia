@@ -36,7 +36,7 @@ export const SignupForm = () => {
           message: '이미 사용중인 이메일입니다.',
         });
       } else {
-        toast.error('회원가입 중 오류가 발생했습니다.');
+        alert('회원가입 중 오류가 발생했습니다.');
       }
     }
   };

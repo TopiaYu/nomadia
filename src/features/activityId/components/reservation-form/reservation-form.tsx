@@ -92,6 +92,7 @@ const ReservationForm = ({
           setSelectedTime('');
           reset(); // 제출 후 폼 초기화
           submittingRef.current = false;
+          window.location.reload();
         },
         onError: () => {
           submittingRef.current = false;

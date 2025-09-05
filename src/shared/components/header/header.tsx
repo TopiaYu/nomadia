@@ -50,7 +50,7 @@ const Header = () => {
             onClick={(e) => {
               e.preventDefault();
               resetSearch();
-              router.push('/activities');
+              router.push('/activities?page=1');
             }}
           >
             <Image
@@ -86,7 +86,7 @@ const Header = () => {
                     <Image
                       src={
                         myData?.profileImageUrl ||
-                        '/images/icons/profile-default.png'
+                        '/images/icons/profile-default.svg'
                       }
                       alt="프로필사진"
                       width={30}

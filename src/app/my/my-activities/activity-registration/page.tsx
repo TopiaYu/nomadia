@@ -1,5 +1,4 @@
 import ActivityRegistrationForm from '@/features/activity-registration/components/activity-registration-form';
-import { AuthGuard } from '@/shared/components/auth/AuthGuard';
 
 const ActivityRegistrationPage = () => {
   return (
@@ -14,10 +13,4 @@ const ActivityRegistrationPage = () => {
   );
 };
 
-export default function GuardActivityRegistrationPage() {
-  return (
-    <AuthGuard>
-      <ActivityRegistrationPage />
-    </AuthGuard>
-  );
-}
+export default ActivityRegistrationPage;

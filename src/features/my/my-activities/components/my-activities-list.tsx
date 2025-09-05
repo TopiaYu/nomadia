@@ -1,8 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { useRef } from 'react';
 
+import NoData from '@/shared/components/no-data/no-data';
 import { MyActivitiesSkeleton } from '@/shared/components/skeleton/skeleton';
 import { useItemInfiniteQuery } from '@/shared/libs/hooks/infiniteScroll/useInfiniteQuery';
 import { useInfiniteScroll } from '@/shared/libs/hooks/infiniteScroll/useInfiniteScroll';
@@ -38,19 +38,7 @@ export const MyActivitiesList = () => {
 
   // 등록한 내용이 없을때
   if (activities?.length === 0) {
-    return (
-      <div className="mt-[6rem] flex flex-col items-center">
-        <Image
-          src="/images/sad-laptop.svg"
-          alt="Sad laptop"
-          width={246}
-          height={200}
-        />
-        <p className="my-[4.5rem] text-[1.8rem] font-medium text-gray-600">
-          아직 등록한 체험이 없어요
-        </p>
-      </div>
-    );
+    return <NoData message="아직 등록한 체험이 없어요" />;
   }
 
   return (

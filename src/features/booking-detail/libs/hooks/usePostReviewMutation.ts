@@ -41,9 +41,8 @@ export const usePostReviewMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', data.activityId] });
       toast.success('리뷰가 성공적으로 작성되었습니다.');
     },
-    onError: (error) => {
-      console.error('리뷰 작성 실패:', error);
-      toast.error('리뷰 작성에 실패했습니다. 다시 시도해주세요.');
+    onError: (_error) => {
+      alert('리뷰 작성에 실패했습니다. 다시 시도해주세요.');
     },
   });
 };

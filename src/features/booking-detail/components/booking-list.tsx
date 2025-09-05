@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { ErrorMessage } from '@/shared/components/error-message/error-message';
+import NoData from '@/shared/components/no-data/no-data';
 import { BookingCardSkeleton } from '@/shared/components/skeleton/skeleton';
 import { sortDatesAscending } from '@/shared/libs/utils/parseDate';
 
@@ -55,18 +56,10 @@ const BookingList = () => {
   // 예약 내역이 없을 때
   if (data && data.reservations.length === 0) {
     return (
-      <div className="flex-center mt-[6rem] mb-[14.9rem] h-[40rem] w-full flex-col gap-[3rem] px-[2rem] md:mb-[47.2rem] lg:mb-[37rem]">
-        <Image
-          src="/images/sad-laptop.svg"
-          alt="Sad laptop"
-          width={246}
-          height={200}
-        />
-        <p className="text-[1.8rem] font-medium text-gray-600">
-          아직 예약한 체험이 없어요.
-        </p>
+      <div className="flex-center flex w-full flex-col gap-[2rem]">
+        <NoData message="아직 예약한 체험이 없어요." />
         <Link href="/activities">
-          <button className="bg-main w-[18.2rem] cursor-pointer rounded-[1.6rem] px-[4rem] py-[1.4rem] text-[1.6rem] font-semibold text-white hover:opacity-90">
+          <button className="bg-main btn-action-blue w-[18.2rem] cursor-pointer rounded-[1.6rem] px-[4rem] py-[1.4rem] text-[1.6rem] font-semibold text-white">
             체험 찾기
           </button>
         </Link>

@@ -268,8 +268,10 @@ export const ContentReservation: React.FC<ContentReservationProps> = ({
             </div>
           ))}
           {filteredReservations.length === 0 && (
-            <p className="text-center text-gray-500">
-              선택한 시간대에 해당 상태의 예약이 없습니다.
+            <p className="txt-16-medium mt-10 text-center text-gray-600">
+              선택한 예약 시간에는
+              <br />
+              신청중인 예약 내역이 없습니다.
             </p>
           )}
         </div>

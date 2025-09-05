@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 import { registrationApi } from '@/features/activity-registration/libs/api/registrationApi';
 import { ActivityRegistrationParams } from '@/shared/types/activity';
@@ -21,7 +20,7 @@ export const useRegistrationMutation = () => {
     },
     onError: (error) => {
       console.error('체험 등록 실패:', error);
-      toast.error('체험 등록에 실패했습니다. 다시 시도해주세요.');
+      alert('체험 등록에 실패했습니다. 다시 시도해주세요.');
     },
   });
 };
